@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Tkdzfz1TLTnu2IisW8S4" name="Page-1">
-        <mxGraphModel dx="654" dy="382" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+        <mxGraphModel dx="1688" dy="988" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -119,7 +119,9 @@
                     <mxGeometry x="1130" y="627.5" width="180" height="105" as="geometry"/>
                 </mxCell>
                 <mxCell id="81" value="Scenes" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="640" y="400" width="440" height="440" as="geometry"/>
+                    <mxGeometry x="640" y="400" width="440" height="430" as="geometry">
+                        <mxRectangle x="640" y="400" width="80" height="30" as="alternateBounds"/>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="86" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;" edge="1" parent="81" source="107" target="97">
                     <mxGeometry width="160" relative="1" as="geometry">
@@ -141,7 +143,9 @@
                     <mxGeometry y="48" width="160" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="102" value="MainScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="81">
-                    <mxGeometry x="20" y="169.99999999999997" width="160" height="60" as="geometry"/>
+                    <mxGeometry x="20" y="169.99999999999997" width="160" height="60" as="geometry">
+                        <mxRectangle x="20" y="169.99999999999997" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="103" value="+ start_button: Button" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="102">
                     <mxGeometry y="26" width="160" height="26" as="geometry"/>
@@ -161,11 +165,13 @@
                 </mxCell>
                 <mxCell id="111" value="상속" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="85">
                     <mxGeometry x="0.5043" relative="1" as="geometry">
-                        <mxPoint x="5" as="offset"/>
+                        <mxPoint x="3" as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="107" value="GameScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="81">
-                    <mxGeometry x="220" y="170" width="200" height="220" as="geometry"/>
+                    <mxGeometry x="220" y="170" width="200" height="220" as="geometry">
+                        <mxRectangle x="220" y="170" width="110" height="30" as="alternateBounds"/>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="108" value="- map: Map&#10;- player: Virus&#10;- enemies: std::list&lt;EnemyCell*&gt;&#10;- traps: std::list&lt;Trap*&gt;&#10;- feeds: std::list&lt;Feed*&gt;&#10;- resume_button: Button&#10;- quit_button: Button" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="107">
                     <mxGeometry y="26" width="200" height="114" as="geometry"/>
@@ -175,6 +181,9 @@
                 </mxCell>
                 <mxCell id="110" value="+ update()&#10;+ pause()&#10;+ resume()&#10;- collisionCheck()&#10;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="107">
                     <mxGeometry y="148" width="200" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" value="로비화면" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="81">
+                    <mxGeometry x="20" y="140" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="89" style="edgeStyle=none;html=1;rounded=0;" edge="1" parent="1" source="102" target="101">
                     <mxGeometry relative="1" as="geometry">
@@ -198,7 +207,7 @@
                 </mxCell>
                 <mxCell id="91" value="사용" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="90">
                     <mxGeometry x="0.6674" relative="1" as="geometry">
-                        <mxPoint y="-35" as="offset"/>
+                        <mxPoint y="-18" as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="92" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1.014;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="75" target="81">
@@ -212,10 +221,10 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="94" value="Win API로 그림" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-                    <mxGeometry x="940" y="880" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="940" y="860" width="100" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="101" value="&lt;br&gt;&lt;br&gt;Widgets&lt;br&gt;(Button, TextBox 등)" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="750" y="880" width="180" height="105" as="geometry"/>
+                    <mxGeometry x="750" y="860" width="180" height="105" as="geometry"/>
                 </mxCell>
                 <mxCell id="112" value="&lt;br&gt;&lt;br&gt;Widgets&lt;br&gt;(Button, TextBox 등)" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;" vertex="1" parent="1">
                     <mxGeometry x="105" y="430" width="180" height="105" as="geometry"/>
