@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Tkdzfz1TLTnu2IisW8S4" name="Page-1">
-        <mxGraphModel dx="1451" dy="988" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+        <mxGraphModel dx="1210" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -19,10 +19,10 @@
                     <mxGeometry x="390" y="252.5" width="180" height="105" as="geometry"/>
                 </mxCell>
                 <mxCell id="67" value="- Scene 전환 관리&lt;br&gt;- 버튼 눌림, 타이머 등 이벤트 처리" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="950" y="220" width="195" height="40" as="geometry"/>
+                    <mxGeometry x="990" y="40" width="195" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="72" value="GameManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
-                    <mxGeometry x="780" y="220" width="160" height="130" as="geometry">
+                    <mxGeometry x="820" y="40" width="160" height="130" as="geometry">
                         <mxRectangle x="840" y="120" width="120" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
@@ -105,36 +105,25 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="77" style="edgeStyle=none;rounded=0;html=1;" parent="1" source="107" target="80" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1190" y="610.4000000000001" as="sourcePoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="78" value="사용" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="77" vertex="1" connectable="0">
-                    <mxGeometry x="-0.1412" relative="1" as="geometry">
-                        <mxPoint x="10" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="80" value="&lt;br&gt;&lt;br&gt;Game Objects&lt;br&gt;(Cell, 먹이, 맵 등)" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="1130" y="627.5" width="180" height="105" as="geometry"/>
-                </mxCell>
                 <mxCell id="81" value="Scenes" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="400" width="440" height="430" as="geometry">
+                    <mxGeometry x="640" y="220" width="520" height="350" as="geometry">
                         <mxRectangle x="640" y="400" width="80" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="86" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;" parent="81" source="107" target="97" edge="1">
+                <mxCell id="86" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;" parent="81" source="316" target="97" edge="1">
                     <mxGeometry width="160" relative="1" as="geometry">
-                        <mxPoint x="310" y="180" as="sourcePoint"/>
+                        <mxPoint x="320" y="170" as="sourcePoint"/>
                         <mxPoint x="145" y="80" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="320" y="150"/>
-                            <mxPoint x="200" y="150"/>
-                        </Array>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="324" value="상속" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="86">
+                    <mxGeometry x="-0.238" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="97" value="&lt;&lt;abstract&gt;&gt;&#10;Scene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="81" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="74" as="geometry"/>
+                    <mxGeometry x="20" y="40" width="160" height="74" as="geometry"/>
                 </mxCell>
                 <mxCell id="99" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="97" vertex="1">
                     <mxGeometry y="40" width="160" height="8" as="geometry"/>
@@ -143,76 +132,45 @@
                     <mxGeometry y="48" width="160" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="102" value="MainScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="81" vertex="1">
-                    <mxGeometry x="20" y="169.99999999999997" width="160" height="60" as="geometry">
+                    <mxGeometry x="260" y="40" width="200" height="88" as="geometry">
                         <mxRectangle x="20" y="169.99999999999997" width="100" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="103" value="+ start_button: Button" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="102" vertex="1">
-                    <mxGeometry y="26" width="160" height="26" as="geometry"/>
+                <mxCell id="103" value="+ start_button: Button&#10;+ nickname_textbox: TextBox&#10;+ addr_textbox: TextBox" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="102" vertex="1">
+                    <mxGeometry y="26" width="200" height="54" as="geometry"/>
                 </mxCell>
                 <mxCell id="104" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="102" vertex="1">
-                    <mxGeometry y="52" width="160" height="8" as="geometry"/>
+                    <mxGeometry y="80" width="200" height="8" as="geometry"/>
                 </mxCell>
                 <mxCell id="85" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;" parent="81" source="102" target="97" edge="1">
                     <mxGeometry width="160" relative="1" as="geometry">
                         <mxPoint x="135" y="180" as="sourcePoint"/>
                         <mxPoint x="205" y="80" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="100" y="150"/>
-                            <mxPoint x="200" y="150"/>
-                        </Array>
+                        <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="111" value="상속" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="85" vertex="1" connectable="0">
                     <mxGeometry x="0.5043" relative="1" as="geometry">
-                        <mxPoint x="3" as="offset"/>
+                        <mxPoint x="27" y="3" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="107" value="GameScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="81" vertex="1">
-                    <mxGeometry x="220" y="170" width="200" height="220" as="geometry">
+                <mxCell id="316" value="GameScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="81">
+                    <mxGeometry x="220" y="170" width="280" height="158" as="geometry">
                         <mxRectangle x="220" y="170" width="110" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="108" value="- map: Map&#10;- player: Virus&#10;- enemies: std::list&lt;EnemyCell*&gt;&#10;- traps: std::list&lt;Trap*&gt;&#10;- feeds: std::list&lt;Feed*&gt;&#10;- resume_button: Button&#10;- quit_button: Button" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="107" vertex="1">
-                    <mxGeometry y="26" width="200" height="114" as="geometry"/>
+                <mxCell id="317" value="- map: Map&#10;- id: uint8&#10;- players: std::unordered_map&lt;uint8, PlayerData&gt;&#10;- socket: Socket" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="316">
+                    <mxGeometry y="26" width="280" height="64" as="geometry"/>
                 </mxCell>
-                <mxCell id="109" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="107" vertex="1">
-                    <mxGeometry y="140" width="200" height="8" as="geometry"/>
+                <mxCell id="318" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="316">
+                    <mxGeometry y="90" width="280" height="8" as="geometry"/>
                 </mxCell>
-                <mxCell id="110" value="+ update()&#10;+ pause()&#10;+ resume()&#10;- collisionCheck()&#10;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="107" vertex="1">
-                    <mxGeometry y="148" width="200" height="72" as="geometry"/>
-                </mxCell>
-                <mxCell id="113" value="로비화면" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="81" vertex="1">
-                    <mxGeometry x="20" y="140" width="60" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="89" style="edgeStyle=none;html=1;rounded=0;" parent="1" source="102" target="101" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="740" y="810"/>
-                            <mxPoint x="840" y="810"/>
-                        </Array>
-                        <mxPoint x="755" y="630.4000000000001" as="sourcePoint"/>
-                        <mxPoint x="845" y="710.4000000000001" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="90" style="edgeStyle=none;html=1;rounded=0;" parent="1" source="107" target="101" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="960" y="810"/>
-                            <mxPoint x="840" y="810"/>
-                        </Array>
-                        <mxPoint x="960" y="790" as="sourcePoint"/>
-                        <mxPoint x="845" y="710.4000000000001" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="91" value="사용" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="90" vertex="1" connectable="0">
-                    <mxGeometry x="0.6674" relative="1" as="geometry">
-                        <mxPoint y="-18" as="offset"/>
-                    </mxGeometry>
+                <mxCell id="319" value="- connect(addr: std::string): socket&#10;- SendData(buf: char*, len: int): bool&#10;- RecvData(buf: char*, len: int): bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="316">
+                    <mxGeometry y="98" width="280" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="92" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1.014;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="75" target="81" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="845" y="350" as="sourcePoint"/>
+                        <mxPoint x="845" y="170" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="93" value="사용" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="92" vertex="1" connectable="0">
@@ -220,110 +178,115 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="94" value="Win API로 그림" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="940" y="860" width="100" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="101" value="&lt;br&gt;&lt;br&gt;Widgets&lt;br&gt;(Button, TextBox 등)" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="750" y="860" width="180" height="105" as="geometry"/>
-                </mxCell>
                 <mxCell id="112" value="&lt;br&gt;&lt;br&gt;Widgets&lt;br&gt;(Button, TextBox 등)" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="430" width="180" height="105" as="geometry"/>
                 </mxCell>
-                <mxCell id="119" value="Client" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="400" y="1320" width="440" height="720" as="geometry"/>
+                <mxCell id="119" value="Client" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="1320" width="680" height="890" as="geometry"/>
                 </mxCell>
-                <mxCell id="125" value="생략" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="119">
-                    <mxGeometry x="350" y="130" width="40" height="30" as="geometry"/>
+                <mxCell id="194" value="버튼 선택" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" parent="119" vertex="1">
+                    <mxGeometry y="30" width="680" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="193" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="119" source="190" target="125">
-                    <mxGeometry relative="1" as="geometry"/>
+                <mxCell id="191" value="멀티 플레이" style="rounded=0;whiteSpace=wrap;html=1;" parent="194" vertex="1">
+                    <mxGeometry x="280" y="10" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="194" value="버튼 선택" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" vertex="1" parent="119">
-                    <mxGeometry y="30" width="440" height="80" as="geometry"/>
+                <mxCell id="190" value="싱글 플레이" style="rounded=0;whiteSpace=wrap;html=1;" parent="194" vertex="1">
+                    <mxGeometry x="550" y="10" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="188" value="플레이어 &lt;br&gt;커스터마이즈" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="194">
-                    <mxGeometry x="30" y="10" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="191" value="멀티 플레이" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="194">
-                    <mxGeometry x="170" y="10" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="190" value="싱글 플레이" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="194">
-                    <mxGeometry x="310" y="10" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="196" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="119" source="191" target="202">
+                <mxCell id="196" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="119" source="191" target="202" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="230" y="130"/>
-                            <mxPoint x="290" y="130"/>
-                        </Array>
+                        <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="197" value="이름 변경 및&lt;br&gt;셀 색상 변경" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="119">
-                    <mxGeometry x="30" y="130" width="120" height="60" as="geometry"/>
+                <mxCell id="202" value="연결 관리" style="swimlane;whiteSpace=wrap;html=1;" parent="119" vertex="1">
+                    <mxGeometry x="170" y="160" width="460" height="710" as="geometry"/>
                 </mxCell>
-                <mxCell id="198" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="119" source="188" target="197">
+                <mxCell id="134" value="서버 접속 요청" style="rounded=0;whiteSpace=wrap;html=1;" parent="202" vertex="1">
+                    <mxGeometry x="170" y="130" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="140" value="초기 정보 수신" style="rounded=0;whiteSpace=wrap;html=1;" parent="202" vertex="1">
+                    <mxGeometry x="170" y="220" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="156" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="202" source="134" target="140" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="202" value="연결 관리" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="119">
-                    <mxGeometry x="170" y="160" width="240" height="540" as="geometry"/>
+                <mxCell id="158" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" parent="202" vertex="1">
+                    <mxGeometry x="20" y="420" width="200" height="280" as="geometry"/>
                 </mxCell>
-                <mxCell id="134" value="서버 접속 요청" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="202">
-                    <mxGeometry x="60" y="40" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="140" value="초기 정보 수신" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="202">
-                    <mxGeometry x="60" y="140" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="156" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="202" source="134" target="140">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="158" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="202">
-                    <mxGeometry x="20" y="240" width="200" height="280" as="geometry"/>
-                </mxCell>
-                <mxCell id="157" value="렌더링" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="158">
+                <mxCell id="157" value="렌더링" style="rounded=0;whiteSpace=wrap;html=1;" parent="158" vertex="1">
                     <mxGeometry x="40" y="200" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="161" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="158" source="159" target="160">
+                <mxCell id="249" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="158" source="248" target="157">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="159" value="업데이트 정보 전송" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="158">
+                <mxCell id="248" value="게임 갱신" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="158">
+                    <mxGeometry x="40" y="60" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="163" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="202" source="140" target="229" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="210" y="330" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="254" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="202" source="229" target="158">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="255" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="202" source="229" target="242">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="229" value="관전/플레이&lt;br&gt;모드 선택" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="202">
+                    <mxGeometry x="170" y="310" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="242" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="202">
+                    <mxGeometry x="240" y="420" width="200" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="244" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="242" source="245" target="247">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="245" value="업데이트 정보 전송&lt;br&gt;send()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="242">
                     <mxGeometry x="40" y="40" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="162" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="158" source="160" target="157">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="160" value="업데이트 정보 수신" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="158">
+                <mxCell id="247" value="업데이트 정보 수신&lt;br&gt;recv()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="242">
                     <mxGeometry x="40" y="120" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="163" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="202" source="140" target="158">
+                <mxCell id="253" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="202" source="197" target="134">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="136" value="Server" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="920" y="1320" width="700" height="720" as="geometry"/>
+                <mxCell id="197" value="이름 변경 및&lt;br&gt;셀 색상 변경" style="rounded=0;whiteSpace=wrap;html=1;" parent="202" vertex="1">
+                    <mxGeometry x="170" y="40" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="143" value="Listen Thread(1)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="136">
-                    <mxGeometry x="20" y="40" width="180" height="480" as="geometry"/>
+                <mxCell id="125" value="생략" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="119" vertex="1">
+                    <mxGeometry x="590" y="130" width="40" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="151" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="143">
-                    <mxGeometry x="15" y="100" width="150" height="240" as="geometry"/>
+                <mxCell id="241" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="119" source="190" target="125">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="138" value="아이디 부여" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="151">
+                <mxCell id="136" value="Server" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="1320" width="700" height="720" as="geometry"/>
+                </mxCell>
+                <mxCell id="143" value="Listen Thread(1)" style="swimlane;whiteSpace=wrap;html=1;" parent="136" vertex="1">
+                    <mxGeometry x="20" y="40" width="180" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="151" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" parent="143" vertex="1">
+                    <mxGeometry x="15" y="40" width="150" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="138" value="아이디 부여" style="rounded=0;whiteSpace=wrap;html=1;" parent="151" vertex="1">
                     <mxGeometry x="15" y="160" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="139" style="edgeStyle=none;html=1;" edge="1" parent="151" source="216" target="138">
+                <mxCell id="139" style="edgeStyle=none;html=1;" parent="151" source="216" target="138" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="80.00000000000023" y="120" as="sourcePoint"/>
                         <mxPoint x="79.87" y="150" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="220" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="139">
+                <mxCell id="220" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="139" vertex="1" connectable="0">
                     <mxGeometry x="-0.1953" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="216" value="클라이언트 접속" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="151">
+                <mxCell id="216" value="클라이언트 접속" style="rhombus;whiteSpace=wrap;html=1;" parent="151" vertex="1">
                     <mxGeometry x="15" y="60" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="218" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" edge="1" parent="151" source="216" target="216">
+                <mxCell id="218" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="151" source="216" target="216" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="65" y="30" as="targetPoint"/>
                         <Array as="points">
@@ -333,59 +296,59 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="219" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="218">
+                <mxCell id="219" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="218" vertex="1" connectable="0">
                     <mxGeometry x="0.1204" relative="1" as="geometry">
                         <mxPoint x="-5" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="144" value="Client Thread(n)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="136">
-                    <mxGeometry x="280" y="40" width="180" height="480" as="geometry"/>
+                <mxCell id="144" value="Client Thread(n)" style="swimlane;whiteSpace=wrap;html=1;" parent="136" vertex="1">
+                    <mxGeometry x="280" y="40" width="180" height="440" as="geometry"/>
                 </mxCell>
-                <mxCell id="228" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" edge="1" parent="144" source="214" target="227">
+                <mxCell id="228" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="144" source="214" target="227" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="214" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="144">
-                    <mxGeometry x="15" y="140" width="150" height="200" as="geometry"/>
+                <mxCell id="214" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" parent="144" vertex="1">
+                    <mxGeometry x="15" y="130" width="150" height="200" as="geometry"/>
                 </mxCell>
-                <mxCell id="215" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" edge="1" parent="214" source="203" target="204">
+                <mxCell id="215" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="214" source="203" target="204" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="203" value="클라이언트 정보 수신" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="214">
+                <mxCell id="203" value="클라이언트 정보 수신&lt;br&gt;Recv()" style="rounded=0;whiteSpace=wrap;html=1;" parent="214" vertex="1">
                     <mxGeometry x="15" y="40" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="204" value="World 정보 전송" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="214">
+                <mxCell id="204" value="World 정보 전송&lt;br&gt;Send()" style="rounded=0;whiteSpace=wrap;html=1;" parent="214" vertex="1">
                     <mxGeometry x="15" y="120" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="226" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" edge="1" parent="144" source="223" target="214">
+                <mxCell id="226" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="144" source="223" target="214" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="223" value="World에 &lt;br&gt;플레이어 추가" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="144">
+                <mxCell id="223" value="World에 &lt;br&gt;플레이어 추가" style="rounded=0;whiteSpace=wrap;html=1;" parent="144" vertex="1">
                     <mxGeometry x="30" y="40" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="227" value="World에서&lt;br&gt;플레이어 삭제" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="144">
-                    <mxGeometry x="30" y="380" width="120" height="60" as="geometry"/>
+                <mxCell id="227" value="World에서&lt;br&gt;플레이어 삭제" style="rounded=0;whiteSpace=wrap;html=1;" parent="144" vertex="1">
+                    <mxGeometry x="30" y="360" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="145" value="Game Thread(1)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="136">
-                    <mxGeometry x="500" y="40" width="180" height="480" as="geometry"/>
+                <mxCell id="145" value="Game Thread(1)" style="swimlane;whiteSpace=wrap;html=1;" parent="136" vertex="1">
+                    <mxGeometry x="500" y="40" width="180" height="300" as="geometry"/>
                 </mxCell>
-                <mxCell id="164" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="145">
-                    <mxGeometry x="15" y="40" width="150" height="270" as="geometry"/>
+                <mxCell id="164" value="Loop" style="swimlane;whiteSpace=wrap;html=1;" parent="145" vertex="1">
+                    <mxGeometry x="15" y="40" width="150" height="240" as="geometry"/>
                 </mxCell>
-                <mxCell id="166" value="업데이트" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="164">
+                <mxCell id="166" value="업데이트 및&lt;br&gt;충돌체크" style="rounded=0;whiteSpace=wrap;html=1;" parent="164" vertex="1">
                     <mxGeometry x="15" y="160" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="167" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="164" source="221" target="166">
+                <mxCell id="167" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="164" source="221" target="166" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="93.31360946745599" y="133.10650887574002" as="sourcePoint"/>
                         <mxPoint x="94.87" y="135" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="168" value="1 이상이면" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="167">
+                <mxCell id="168" value="1 이상이면" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="167" vertex="1" connectable="0">
                     <mxGeometry x="-0.0766" y="1" relative="1" as="geometry">
                         <mxPoint x="-1" y="-3" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="170" style="edgeStyle=none;rounded=0;html=1;" edge="1" parent="164" source="221" target="221">
+                <mxCell id="170" style="edgeStyle=none;rounded=0;html=1;" parent="164" source="221" target="221" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="56.58823529411802" y="48.764705882353155" as="targetPoint"/>
                         <mxPoint x="120" y="85" as="sourcePoint"/>
@@ -396,91 +359,172 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="171" value="0이면" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="170">
+                <mxCell id="171" value="0이면" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="170" vertex="1" connectable="0">
                     <mxGeometry x="0.0836" relative="1" as="geometry">
                         <mxPoint x="-18" y="5" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="221" value="클라이언트&lt;br&gt;개수 확인" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="164">
+                <mxCell id="221" value="클라이언트&lt;br&gt;개수 확인" style="rhombus;whiteSpace=wrap;html=1;" parent="164" vertex="1">
                     <mxGeometry x="15" y="60" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="153" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;rounded=0;entryX=0.001;entryY=0.021;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="136" source="138" target="144">
+                <mxCell id="153" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;rounded=0;entryX=0.001;entryY=0.021;entryDx=0;entryDy=0;entryPerimeter=0;" parent="136" source="138" target="144" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="270" y="60" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="240" y="330"/>
+                            <mxPoint x="240" y="270"/>
                             <mxPoint x="240" y="50"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="154" value="쓰레드 생성" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="153">
+                <mxCell id="154" value="쓰레드 생성" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="153" vertex="1" connectable="0">
                     <mxGeometry x="0.1745" y="-2" relative="1" as="geometry">
                         <mxPoint x="-2" y="16" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="207" value="&lt;br&gt;&lt;br&gt;World&lt;br&gt;&lt;br&gt;객체들을 담는 컨테이너" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;" vertex="1" parent="136">
-                    <mxGeometry x="390" y="580" width="180" height="120" as="geometry"/>
-                </mxCell>
-                <mxCell id="208" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="136" source="166" target="207">
+                <mxCell id="208" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="136" source="166" target="231" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="590" y="640"/>
-                        </Array>
+                        <Array as="points"/>
+                        <mxPoint x="570" y="640" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="224" value="Read/Write" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="208">
+                <mxCell id="224" value="Read/Write" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="208" vertex="1" connectable="0">
                     <mxGeometry x="0.0135" y="2" relative="1" as="geometry">
-                        <mxPoint x="-2" y="58" as="offset"/>
+                        <mxPoint x="-31" y="78" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="213" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" edge="1" parent="136" source="144" target="207">
+                <mxCell id="213" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="136" source="144" target="231" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="370" y="640"/>
-                        </Array>
+                        <Array as="points"/>
+                        <mxPoint x="390" y="640" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="225" value="Read/Write" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="213">
+                <mxCell id="225" value="Read/Write" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="213" vertex="1" connectable="0">
                     <mxGeometry x="-0.0626" relative="1" as="geometry">
-                        <mxPoint y="-19" as="offset"/>
+                        <mxPoint y="-4" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="141" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="138" target="140">
+                <mxCell id="231" value="World" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="136">
+                    <mxGeometry x="330" y="520" width="300" height="156" as="geometry"/>
+                </mxCell>
+                <mxCell id="232" value="+ players: std::unordered_map&lt;uint8, PlayerData&gt;&#10;+ watchers: std::unordered_map&lt;uint8, WatcherData&gt;&#10;+ traps: std::list&lt;Trap&gt;&#10;+ feeds: std::list&lt;Feeds&gt;&#10;+ ais: std::list&lt;AI&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="231">
+                    <mxGeometry y="26" width="300" height="84" as="geometry"/>
+                </mxCell>
+                <mxCell id="233" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="231">
+                    <mxGeometry y="110" width="300" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="234" value="- update()&#10;- collisionCheck()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="231">
+                    <mxGeometry y="118" width="300" height="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="200" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="175" target="202" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="155" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="134" target="216">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="970.0000000000002" y="1550" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="200" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="175" target="202">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="175" value="GameScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+                <mxCell id="175" value="GameScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="105" y="1620" width="265" height="260" as="geometry">
                         <mxRectangle x="220" y="170" width="110" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="176" value="- map: Map&#10;- player: Virus&#10;- objects: std::list&lt;Cell*&gt;&#10;- resume_button: Button&#10;- quit_button: Button&#10;&#10;- socket: Socket" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="175">
+                <mxCell id="176" value="- map: Map&#10;- player: Virus&#10;- objects: std::list&lt;Cell*&gt;&#10;- resume_button: Button&#10;- quit_button: Button&#10;&#10;- socket: Socket" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="175" vertex="1">
                     <mxGeometry y="26" width="265" height="114" as="geometry"/>
                 </mxCell>
-                <mxCell id="177" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="175">
+                <mxCell id="177" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="175" vertex="1">
                     <mxGeometry y="140" width="265" height="8" as="geometry"/>
                 </mxCell>
-                <mxCell id="178" value="+ pause()&#10;+ resume()&#10;&#10;- connect(addr: std::string): socket&#10;- send(socket: Socket, buf: char*, len: int): bool&#10;- recv(socket: Socket, buf: char*, len: int): bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="175">
+                <mxCell id="178" value="+ pause()&#10;+ resume()&#10;&#10;- connect(addr: std::string): socket&#10;- send(socket: Socket, buf: char*, len: int): bool&#10;- recv(socket: Socket, buf: char*, len: int): bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="175" vertex="1">
                     <mxGeometry y="148" width="265" height="112" as="geometry"/>
                 </mxCell>
-                <mxCell id="199" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="184" target="194">
+                <mxCell id="199" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="184" target="194" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="184" value="MainScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+                <mxCell id="184" value="MainScene" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="170" y="1346" width="180" height="88" as="geometry"/>
                 </mxCell>
-                <mxCell id="185" value="+ single_play_button: Button&#10;+ multi_play_button: Button&#10;+ customize_button: Button" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="184">
+                <mxCell id="185" value="+ single_play_button: Button&#10;+ multi_play_button: Button&#10;+ customize_button: Button" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="184" vertex="1">
                     <mxGeometry y="26" width="180" height="54" as="geometry"/>
                 </mxCell>
-                <mxCell id="186" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="184">
+                <mxCell id="186" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="184" vertex="1">
                     <mxGeometry y="80" width="180" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="290" value="Client" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="1210" y="80" width="520" height="920" as="geometry"/>
+                </mxCell>
+                <mxCell id="295" value="연결 관리" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="290">
+                    <mxGeometry x="30" y="350" width="460" height="550" as="geometry"/>
+                </mxCell>
+                <mxCell id="296" value="서버 접속 요청" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="295">
+                    <mxGeometry x="170" y="40" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="297" value="초기 정보 수신" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="295">
+                    <mxGeometry x="170" y="130" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="298" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="295" source="296" target="297">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="299" value="업데이트 Loop" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="295">
+                    <mxGeometry x="20" y="330" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="300" value="렌더링" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="299">
+                    <mxGeometry x="40" y="120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="301" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="299" source="302" target="300">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="302" value="게임 갱신" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="299">
+                    <mxGeometry x="40" y="40" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="303" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="295" source="297" target="306">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="210" y="240" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="304" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="295" source="306" target="299">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="305" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="295" source="306" target="307">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="306" value="관전/플레이&lt;br&gt;모드 선택" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="295">
+                    <mxGeometry x="170" y="220" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="307" value="통신 Loop" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="295">
+                    <mxGeometry x="240" y="330" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="308" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="307" source="309" target="310">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="309" value="업데이트 정보 전송&lt;br&gt;send()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="307">
+                    <mxGeometry x="40" y="40" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="310" value="업데이트 정보 수신&lt;br&gt;recv()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="307">
+                    <mxGeometry x="40" y="120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="332" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="290" source="328" target="295">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="333" value="Login" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="290">
+                    <mxGeometry x="160" y="40" width="200" height="286" as="geometry"/>
+                </mxCell>
+                <mxCell id="326" value="주소 입력" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="333">
+                    <mxGeometry x="40" y="31" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="327" value="이름 입력&lt;br&gt;및 색상 선택" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="333">
+                    <mxGeometry x="40" y="121" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="329" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="333" source="326" target="327">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="328" value="시작버튼 클릭" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="333">
+                    <mxGeometry x="40" y="211" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="330" style="edgeStyle=none;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="333" source="327" target="328">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="315" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.001;entryY=0.016;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="316" target="295">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="331" style="edgeStyle=none;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.007;entryY=0.041;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="103" target="333">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1270" y="170" as="targetPoint"/>
+                    </mxGeometry>
                 </mxCell>
             </root>
         </mxGraphModel>
