@@ -55,14 +55,11 @@
     <ClInclude Include="Widgets\Button.h" />
     <ClInclude Include="Widgets\TextBox.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{39b815b3-6783-4d05-b30c-2f048eb32dab}</ProjectGuid>
-    <RootNamespace>NetGameAgar</RootNamespace>
+    <ProjectGuid>{b1a3513f-5379-4ed6-8439-2c2d69d462de}</ProjectGuid>
+    <RootNamespace>AgarClient</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
