@@ -70,6 +70,9 @@
     <ClCompile Include="Util.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkFunction.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Cell.h">
@@ -118,6 +121,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Util.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkFunction.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

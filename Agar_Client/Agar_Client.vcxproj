@@ -30,6 +30,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Point.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
+    <ClCompile Include="NetworkFunction.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\MainScene.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="Game\Virus.h" />
     <ClInclude Include="Math\Point.h" />
     <ClInclude Include="Math\Vector.h" />
+    <ClInclude Include="NetworkFunction.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\MainScene.h" />
     <ClInclude Include="Scene\Scene.h" />
