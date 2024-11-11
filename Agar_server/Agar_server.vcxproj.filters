@@ -1,22 +1,97 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
+    <Filter Include="src">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="src\Game">
+      <UniqueIdentifier>{1d21de99-93f9-4eba-93bf-28b557538854}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="src\Math">
+      <UniqueIdentifier>{1e1bd085-8863-493c-b62e-f586ec010b5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Net">
+      <UniqueIdentifier>{d266579f-24b4-4f00-92d0-05e30d5027fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="Math\Point.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Cell.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\AI.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Feed.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Map.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Object.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Trap.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Player.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\World.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Math\Point.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Cell.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\AI.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Feed.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Map.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Object.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Trap.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Player.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\PlayerData.h">
+      <Filter>src\Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\World.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
