@@ -61,6 +61,10 @@ void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 }
 
 
+void GameManager::mouseMove(const HWND& hWnd, const POINT& point) {
+	current_scene->mouseMove(point);
+}
+
 void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Direction& dir) {
 	switch(dir) {
 	case Left:
@@ -102,6 +106,7 @@ void GameManager::quit(const HWND& hWnd) {
 	switch(current_scene->getID()) {
 	case Game:
 		current_scene = &main_scene;
+		game_scene.disconnect();
 		KillTimer(hWnd, GenerateFeeds);
 		KillTimer(hWnd, GenerateEnemy);
 		releaseCursor();
@@ -155,6 +160,7 @@ void GameManager::gameStart(const HWND& hWnd) {
 	fixCursor(hWnd);
 
 	game_scene.setUp();
+	game_scene.connect();
     current_scene = &game_scene;
 
 	SetTimer(hWnd, GenerateFeeds, 2000, NULL);

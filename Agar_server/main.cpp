@@ -59,6 +59,13 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int thread_
             break;
         }
 
+        struct Packet {
+            LONG x;
+            LONG y;
+        }* p;
+        p = reinterpret_cast<Packet*>(buf);
+        cout << p->x << ", " << p->y << endl;
+
         // 데이터 보내기
         retval = send(socket, buf, retval, 0);
         if(retval == SOCKET_ERROR) {

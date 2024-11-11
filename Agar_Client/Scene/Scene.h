@@ -31,4 +31,5 @@ public:
     SceneID getID() const;
     virtual ButtonID clickL(const POINT& point) const;
     virtual ButtonID clickR(const POINT& point) const;
+    virtual void mouseMove(const POINT& point) const;
 };

@@ -9,11 +9,23 @@
 #include <math.h>
 
 
-GameScene::GameScene() : Scene { Game }, map { },
-player { Point { map.getWidth()/2.0, map.getHeight()/2.0 } }, paused { false }, cam_mode { Fixed }, show_score { false },
-resume_button { L"Resume", { 20, 30 }, 60, 15 }, quit_button { L"Quit", { 20, 60 }, 60, 15 }, 
-game_over_message { L"Game Over", { 10, 30 }, 80, 15 }, game_over { false }, feed_erase_count { 0 },
-play_time { 0 }, start_time { clock() }, end_time { clock() } {
+GameScene::GameScene(): 
+    Scene { Game }, 
+    map { },
+    player { Point { map.getWidth()/2.0, map.getHeight()/2.0 } }, 
+    paused { false }, 
+    cam_mode { Fixed }, 
+    show_score { false },
+    resume_button { L"Resume", { 20, 30 }, 60, 15 }, 
+    quit_button { L"Quit", { 20, 60 }, 60, 15 }, 
+    game_over_message { L"Game Over", { 10, 30 }, 80, 15 }, 
+    game_over { false }, 
+    feed_erase_count { 0 },
+    play_time { 0 }, 
+    start_time { clock() }, 
+    end_time { clock() }, 
+    sock { NULL } 
+{
     player.color = Green;
     resume_button.border_color = Gray;
     resume_button.border_width = 3;
@@ -48,9 +60,10 @@ void GameScene::setUp() {
     for(int i=0; i<5; i++) {
         randomGenTrap();
     }
+}
 
 
-
+void GameScene::connect() {
     // 윈속 초기화
     WSADATA wsa;
     if(WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
@@ -58,7 +71,7 @@ void GameScene::setUp() {
     }
 
     // 소켓 생성
-    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock == INVALID_SOCKET) {
         err_quit("socket()");
     }
@@ -70,25 +83,13 @@ void GameScene::setUp() {
     inet_pton(AF_INET, "127.0.0.1", &serveraddr.sin_addr);
     serveraddr.sin_port = htons(9000);
 
-    int retval = connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+    int retval = ::connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
     if(retval == SOCKET_ERROR) {
         err_quit("connect()");
     }
+}
 
-    // 데이터 통신에 사용할 변수	
-    char buf[6] = "Hello";
-
-    // 서버와 데이터 통신
-    retval = send(sock, buf, 6, 0);
-    if(retval == SOCKET_ERROR) {
-        err_quit("send()");
-    }
-
-    retval = recv(sock, buf, 6, 0);
-    if(retval == SOCKET_ERROR) {
-        err_quit("recv()");
-    }
-
+void GameScene::disconnect() {
     // 소켓 닫기
     closesocket(sock);
 
@@ -739,4 +740,13 @@ ButtonID GameScene::clickR(const POINT& point) {
     }
 
     return None;
+}
+
+
+void GameScene::mouseMove(const POINT& point) const {
+    if(paused || game_over) {
+        return;
+    }
+
+    send(sock, (char*)&point, sizeof(POINT), 0);
 }

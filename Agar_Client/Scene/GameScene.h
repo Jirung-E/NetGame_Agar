@@ -39,11 +39,16 @@ private:
 
     int feed_erase_count;
 
+    SOCKET sock;
+
 public:
     GameScene();
 
 public:
     void setUp();
+    void connect();
+    void disconnect();
+
     void update(const POINT& point);
 
     void togglePauseState();
@@ -76,4 +81,5 @@ public:
 
     ButtonID clickL(const POINT& point);
     ButtonID clickR(const POINT& point);
+    void mouseMove(const POINT& point) const;
 };

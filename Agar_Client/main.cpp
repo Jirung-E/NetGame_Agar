@@ -44,6 +44,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 	case WM_MOUSEMOVE:
+		manager.mouseMove(hWnd, { LOWORD(lParam), HIWORD(lParam) });
 		break;
 	case WM_CHAR:
 		manager.keyboardInput(hWnd, wParam);
