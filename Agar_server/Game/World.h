@@ -29,6 +29,10 @@ public:
     void setUp();
     void update();
 
+    void addPlayer(uint8_t id);
+    void removePlayer(uint8_t id);
+    const std::unordered_map<uint8_t, Player>& getPlayers() const;
+
 private:
     void updatePlayers();
     //void updateEnemies();

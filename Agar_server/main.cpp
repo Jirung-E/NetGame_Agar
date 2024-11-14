@@ -17,6 +17,8 @@ const int PACKETSIZEMAX = 512;
 const int MAX_CLIENTS = 8;
 atomic_bool slot[MAX_CLIENTS];
 
+World world;
+
 
 void run_game(World& world) {
     auto timer = clock();
@@ -38,7 +40,7 @@ void run_game(World& world) {
 }
 
 
-void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int thread_id) {
+void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
     char buf[PACKETSIZEMAX];
 
@@ -46,6 +48,12 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int thread_
     char addr[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
     printf("%s:%d\n", addr, ntohs(clientaddr.sin_port));
+
+    world.addPlayer(id);
+    cout << "Players: \n";
+    for(const auto& p : world.getPlayers()) {
+        printf(" - id: %2d\n", p.first);
+    }
 
     // 클라이언트와 데이터 통신
     while(true) {
@@ -74,16 +82,22 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int thread_
         }
     }
 
+    world.removePlayer(id);
+    cout << "Players: \n";
+    for(const auto& p : world.getPlayers()) {
+        printf(" - id: %2d\n", p.first);
+    }
+
     // 통신 소켓 닫기
     closesocket(socket);
 
-    slot[thread_id] = false;
+    slot[id] = false;
 }
 
 
 int main() {
     // ------------------------------------- 게임 실행 -------------------------------------
-    World world;
+    //World world;
     world.setUp();
 
     thread game_logic { [&]() { run_game(world); } };

@@ -27,6 +27,22 @@ void World::update() {
 }
 
 
+void World::addPlayer(uint8_t id) {
+    Point p { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1),
+              getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) 
+    };
+    players.insert({ id, Player { id, p } });
+}
+
+void World::removePlayer(uint8_t id) {
+    players.erase(id);
+}
+
+const std::unordered_map<uint8_t, Player>& World::getPlayers() const {
+    return players;
+}
+
+
 void World::updatePlayers() {
     for(auto& t_player : players) {
         auto& player = t_player.second;
