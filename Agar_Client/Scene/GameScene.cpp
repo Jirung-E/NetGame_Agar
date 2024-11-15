@@ -688,7 +688,8 @@ ButtonID GameScene::clickL(const POINT& point) {
         return None;
     }
 
-    player.split();
+    press_split = true;
+    //player.split();
 
     return None;
 }
@@ -701,26 +702,28 @@ ButtonID GameScene::clickR(const POINT& point) {
         return None;
     }
 
-    for(auto e : player.cells) {
-        Cell* c = e->spit();
-        if(c != nullptr) {
-            Feed* f = new Feed { c->position, c->getRadius() };
-            f->color = c->color;
-            f->position = c->position;
-            f->velocity = c->velocity;
-            feeds.push_back(f);
-            delete c;
-        }
-    }
+    press_spit = true;
+    //for(auto e : player.cells) {
+    //    Cell* c = e->spit();
+    //    if(c != nullptr) {
+    //        Feed* f = new Feed { c->position, c->getRadius() };
+    //        f->color = c->color;
+    //        f->position = c->position;
+    //        f->velocity = c->velocity;
+    //        feeds.push_back(f);
+    //        delete c;
+    //    }
+    //}
 
     return None;
 }
 
 
-void GameScene::mouseMove(const POINT& point) const {
+void GameScene::mouseMove(const POINT& point) {
     if(paused || game_over) {
         return;
     }
 
-    send(clientsocket, (char*)&point, sizeof(POINT), 0);
+    mouse_position.x = point.x;
+    mouse_position.y = point.y;
 }

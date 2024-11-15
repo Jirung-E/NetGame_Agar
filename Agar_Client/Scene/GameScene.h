@@ -39,6 +39,10 @@ private:
 
     int feed_erase_count;
 
+    bool press_spit;
+    bool press_split;
+    Point mouse_position;
+
     //SOCKET sock;
 
 public:
@@ -81,5 +85,5 @@ public:
 
     ButtonID clickL(const POINT& point);
     ButtonID clickR(const POINT& point);
-    void mouseMove(const POINT& point) const;
+    void mouseMove(const POINT& point);
 };
