@@ -50,15 +50,14 @@ void NetworkFinalize()
 }
 
 
-void SendData(char* buf)
+void SendData(void* buf, int size)
 {
 	int retval;
 
 	// 데이터 전송
-	retval = send(clientsocket, buf, strlen(buf), 0);
+	retval = send(clientsocket, (char*)buf, size, 0);
 	if (retval == SOCKET_ERROR) err_quit("send()");
 }
-
 
 DWORD __stdcall RecvThread(LPVOID arg)
 {
