@@ -39,7 +39,7 @@ private:
 
     int feed_erase_count;
 
-    SOCKET sock;
+    //SOCKET sock;
 
 public:
     GameScene();

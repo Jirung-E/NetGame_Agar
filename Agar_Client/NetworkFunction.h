@@ -13,6 +13,9 @@
 #define SERVERPORT 9000
 #define BUFSIZE    512
 
+extern SOCKET clientsocket;
+
+
 void NetworkInitialize();  // 네트워크 초기화
 void NetworkFinalize();    // 네트워크 종료
 

@@ -1,4 +1,4 @@
-#include "../Common.h"
+#include "../NetworkFunction.h"
 
 #include "GameScene.h"
 
@@ -23,8 +23,8 @@ GameScene::GameScene():
     feed_erase_count { 0 },
     play_time { 0 }, 
     start_time { clock() }, 
-    end_time { clock() }, 
-    sock { NULL } 
+    end_time { clock() } 
+    //sock { NULL } 
 {
     player.color = Green;
     resume_button.border_color = Gray;
@@ -64,37 +64,11 @@ void GameScene::setUp() {
 
 
 void GameScene::connect() {
-    // 윈속 초기화
-    WSADATA wsa;
-    if(WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-        return;
-    }
-
-    // 소켓 생성
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    if(sock == INVALID_SOCKET) {
-        err_quit("socket()");
-    }
-
-    // connect
-    struct sockaddr_in serveraddr;
-    memset(&serveraddr, 0, sizeof(serveraddr));
-    serveraddr.sin_family = AF_INET;
-    inet_pton(AF_INET, "127.0.0.1", &serveraddr.sin_addr);
-    serveraddr.sin_port = htons(9000);
-
-    int retval = ::connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-    if(retval == SOCKET_ERROR) {
-        err_quit("connect()");
-    }
+    NetworkInitialize();
 }
 
 void GameScene::disconnect() {
-    // 소켓 닫기
-    closesocket(sock);
-
-    // 윈속 종료
-    WSACleanup();
+    NetworkFinalize();
 }
 
 
@@ -748,5 +722,5 @@ void GameScene::mouseMove(const POINT& point) const {
         return;
     }
 
-    send(sock, (char*)&point, sizeof(POINT), 0);
+    send(clientsocket, (char*)&point, sizeof(POINT), 0);
 }

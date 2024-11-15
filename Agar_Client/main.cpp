@@ -1,5 +1,3 @@
-#include "NetworkFunction.h"
-
 #include <windows.h>
 #include <tchar.h>
 
@@ -110,16 +108,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
-	// 네트워크 초기화
-	NetworkInitialize();
-
 	while(GetMessage(&Message, 0, 0, 0)) {
 		TranslateMessage(&Message);
 		DispatchMessage(&Message);
 	}
-
-	// 네트워크 종료
-	NetworkFinalize();
 
 	return Message.wParam;
 }
