@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 
+char* SERVERIP = (char*)"127.0.0.1";
+
 WSADATA wsadata;
 SOCKET clientsocket;
 struct sockaddr_in serveraddr;

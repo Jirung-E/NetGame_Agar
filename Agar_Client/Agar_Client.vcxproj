@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Game\Cell.cpp" />
     <ClCompile Include="Game\EnemyCell.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="Widgets\TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Game\Cell.h" />
     <ClInclude Include="Game\EnemyCell.h" />

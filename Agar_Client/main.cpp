@@ -1,8 +1,9 @@
+#include "NetworkFunction.h"
+
 #include <windows.h>
 #include <tchar.h>
 
 #include "GameManager.h"
-#include "NetworkFunction.h"
 
 
 HINSTANCE g_hInst;
