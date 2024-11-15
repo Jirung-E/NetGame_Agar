@@ -127,7 +127,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Cell.cpp" />
+    <ClCompile Include="Game\AI.cpp" />
+    <ClCompile Include="Game\Feed.cpp" />
+    <ClCompile Include="Game\Map.cpp" />
+    <ClCompile Include="Game\Object.cpp" />
+    <ClCompile Include="Game\Trap.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\World.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math\Point.cpp" />
+    <ClCompile Include="Math\Vector.cpp" />
+    <ClCompile Include="Util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="Game\Cell.h" />
+    <ClInclude Include="Game\AI.h" />
+    <ClInclude Include="Game\Feed.h" />
+    <ClInclude Include="Game\Map.h" />
+    <ClInclude Include="Game\Object.h" />
+    <ClInclude Include="Game\Trap.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\World.h" />
+    <ClInclude Include="Math\Point.h" />
+    <ClInclude Include="Math\Vector.h" />
+    <ClInclude Include="Net\PlayerData.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

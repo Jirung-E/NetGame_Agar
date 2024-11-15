@@ -26,6 +26,7 @@ public:
 
     void keyboardInput(const HWND& hWnd, int keycode);
 
+    void mouseMove(const HWND& hWnd, const POINT& point);
     void clickScene(const HWND& hWnd, const POINT& point, const Direction& dir);
     void update(const HWND& hWnd);
 
