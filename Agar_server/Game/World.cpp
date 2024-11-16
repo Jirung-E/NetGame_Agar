@@ -44,18 +44,25 @@ const std::unordered_map<uint8_t, Player>& World::getPlayers() const {
 
 
 void World::updatePlayers() {
-    for(auto& t_player : players) {
+    for (auto& t_player : players) {
         auto& player = t_player.second;
-        for(auto e : player.cells) {
-            Point p { e->position };
-            Vector dir { player.destination - e->position };
-            e->move(dir / 50, map);
+        for (auto e : player.cells) {
+            Point p{ e->position };
+            Vector dir{ player.destination - e->position };
+            e->move(dir / 50, map);  // destination에 따라 이동
             e->growUp();
         }
         player.update();
     }
 }
 
+void World::setPlayerDestination(uint8_t id, LONG x, LONG y) {
+    auto it = players.find(id);
+    if (it != players.end()) {
+        it->second.destination.x = x;
+        it->second.destination.y = y;
+    }
+}
 //void World::updateEnemies() {
 //    for(auto& e : ais) {
 //        e->growUp();

@@ -5,6 +5,7 @@
 
 #include "Common.h"
 #include "Game/World.h"
+#include "../protocol.h"
 #include "Util.h"
 
 using namespace std;
@@ -40,7 +41,7 @@ void run_game(World& world) {
 }
 
 
-void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
+void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
     char buf[PACKETSIZEMAX];
 
@@ -67,7 +68,7 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             break;
         }
 
-        struct Packet {
+        struct Packet { // protocol.h 의 CS_ACTION_PACKET 으로 들어오는 정보일 예정
             LONG x;
             LONG y;
         }* p;
@@ -80,6 +81,10 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             err_display("send()");
             break;
         }
+
+        //player data update
+        world.setPlayerDestination(id, p->x, p->y);
+
     }
 
     world.removePlayer(id);
@@ -94,25 +99,15 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     slot[id] = false;
 }
 
-
-int main() {
-    // ------------------------------------- 게임 실행 -------------------------------------
-    //World world;
-    world.setUp();
-
-    thread game_logic { [&]() { run_game(world); } };
-    game_logic.detach();
-
-
-    // ------------------------------------- 네트워크 작업 -------------------------------------
+int NetworkInitialize() {
     WSADATA wsa;
-    if(WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
         cout << "윈속 초기화 실패" << endl;
         return 1;
     }
 
     SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
-    if(listen_sock == INVALID_SOCKET) {
+    if (listen_sock == INVALID_SOCKET) {
         err_quit("socket()");
     }
 
@@ -125,13 +120,13 @@ int main() {
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serveraddr.sin_port = htons(SERVERPORT);
     retval = bind(listen_sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-    if(retval == SOCKET_ERROR) {
+    if (retval == SOCKET_ERROR) {
         err_quit("bind()");
     }
 
     // listen()
     retval = listen(listen_sock, SOMAXCONN);
-    if(retval == SOCKET_ERROR) {
+    if (retval == SOCKET_ERROR) {
         err_quit("listen()");
     }
 
@@ -140,23 +135,23 @@ int main() {
     struct sockaddr_in clientaddr;
     int addrlen;
 
-    while(true) {
+    while (true) {
         // accept()
         addrlen = sizeof(clientaddr);
         client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
-        if(client_sock == INVALID_SOCKET) {
+        if (client_sock == INVALID_SOCKET) {
             err_display("accept()");
             break;
         }
 
         // 슬롯이 빌때까지 대기
         bool wait = true;
-        while(wait) {
-            for(int i=0; i<MAX_CLIENTS; ++i) {
+        while (wait) {
+            for (int i = 0; i < MAX_CLIENTS; ++i) {
                 // 슬롯이 비어있으면 다운로드 시작
-                if(slot[i] == false) {
+                if (slot[i] == false) {
                     slot[i] = true;
-                    std::thread new_client_thread { handle_connection, client_sock, clientaddr, i };
+                    std::thread new_client_thread{ProcessClient, client_sock, clientaddr, i };
                     new_client_thread.detach();
 
                     wait = false;
@@ -170,4 +165,17 @@ int main() {
     closesocket(listen_sock);
 
     WSACleanup();
+}
+
+int main() {
+    // ------------------------------------- 게임 실행 -------------------------------------
+    //World world;
+    world.setUp();
+
+    thread game_logic { [&]() { run_game(world); } };
+    game_logic.detach();
+
+
+    // ------------------------------------- 네트워크 작업 -------------------------------------
+    NetworkInitialize();
 }

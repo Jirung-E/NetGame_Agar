@@ -132,5 +132,8 @@
     <ClInclude Include="Common.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\protocol.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,4 +10,8 @@ struct CS_ACTION_PACKET {
 	float mx;   // [-1.0f ~ 1.0f]
 	float my;   // [-1.0f ~ 1.0f]
 };
-#pragma pack(pop)
+#pragma pack(push, 1)
+
+struct SC_WORLD_PACKET {
+
+};
