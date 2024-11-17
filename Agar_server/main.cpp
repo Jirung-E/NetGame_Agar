@@ -2,10 +2,12 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <mutex>
 
 #include "Common.h"
 #include "Game/World.h"
 #include "Util.h"
+#include "../protocol.h"
 
 using namespace std;
 using namespace chrono;
@@ -15,7 +17,8 @@ const int SERVERPORT = 9000;
 const int PACKETSIZEMAX = 512;
 
 const int MAX_CLIENTS = 8;
-atomic_bool slot[MAX_CLIENTS];
+mutex socket_mutex;
+SOCKET sockets[MAX_CLIENTS];
 
 World world;
 
@@ -23,7 +26,7 @@ World world;
 void run_game(World& world) {
     auto timer = clock();
     auto elapsed = 0;
-    int update_time = fps(60);
+    int update_time = fps(30);
 
     // 고정프레임 업데이트
     while(true) {
@@ -36,6 +39,47 @@ void run_game(World& world) {
         elapsed -= update_time;
 
         world.update();
+
+        auto players = world.getPlayers();
+
+        // World 정보 전송
+        SC_WORLD_PACKET packet;
+        packet.type = SC_WORLD;
+        packet.object_num = static_cast<int>(players.size());
+
+        char buf[PACKETSIZEMAX];
+
+        memcpy(buf, &packet, sizeof(SC_WORLD_PACKET));
+        int offset = sizeof(SC_WORLD_PACKET);
+
+        for(const auto& p : players) {
+            auto player = p.second;
+
+            for(const auto& cell : player.cells) {
+                SC_OBJECT obj;
+                obj.x = cell->position.x;
+                obj.y = cell->position.y;
+                obj.radius = cell->getRadius();
+                obj.color = cell->color;
+
+                // 버퍼가 넘칠수도 있다.
+                memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
+                offset += sizeof(SC_OBJECT);
+            }
+        }
+
+        // 각 소켓에 데이터 전송
+        for(auto& sock : sockets) {
+            if(sock == INVALID_SOCKET) {
+                continue;
+            }
+
+            // 데이터 전송(send()
+            int retval = send(sock, buf, sizeof(SC_WORLD_PACKET), 0);
+            if(retval == SOCKET_ERROR) {
+                err_display("send()");
+            }
+        }
     }
 }
 
@@ -49,6 +93,7 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
     printf("%s:%d\n", addr, ntohs(clientaddr.sin_port));
 
+    // World에 플레이어 추가
     world.addPlayer(id);
     cout << "Players: \n";
     for(const auto& p : world.getPlayers()) {
@@ -57,7 +102,7 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
 
     // 클라이언트와 데이터 통신
     while(true) {
-        // 데이터 받기
+        // 클라이언트 정보 수신
         retval = recv(socket, buf, PACKETSIZEMAX, 0);
         if(retval == SOCKET_ERROR) {
             err_display("recv()");
@@ -67,21 +112,11 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             break;
         }
 
-        struct Packet {
-            LONG x;
-            LONG y;
-        }* p;
-        p = reinterpret_cast<Packet*>(buf);
-        cout << p->x << ", " << p->y << endl;
-
-        // 데이터 보내기
-        retval = send(socket, buf, retval, 0);
-        if(retval == SOCKET_ERROR) {
-            err_display("send()");
-            break;
-        }
+        // 플레이어 정보 업데이트
+        // ...
     }
 
+    // World에서 플레이어 삭제
     world.removePlayer(id);
     cout << "Players: \n";
     for(const auto& p : world.getPlayers()) {
@@ -91,7 +126,9 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     // 통신 소켓 닫기
     closesocket(socket);
 
-    slot[id] = false;
+    socket_mutex.lock();
+    sockets[id] = INVALID_SOCKET;
+    socket_mutex.unlock();
 }
 
 
@@ -105,6 +142,11 @@ int main() {
 
 
     // ------------------------------------- 네트워크 작업 -------------------------------------
+    for(auto& sock : sockets) {
+        sock = INVALID_SOCKET;
+    }
+
+
     WSADATA wsa;
     if(WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
         cout << "윈속 초기화 실패" << endl;
@@ -152,10 +194,10 @@ int main() {
         // 슬롯이 빌때까지 대기
         bool wait = true;
         while(wait) {
+            socket_mutex.lock();
             for(int i=0; i<MAX_CLIENTS; ++i) {
-                // 슬롯이 비어있으면 다운로드 시작
-                if(slot[i] == false) {
-                    slot[i] = true;
+                if(sockets[i] == INVALID_SOCKET) {
+                    sockets[i] = client_sock;
                     std::thread new_client_thread { handle_connection, client_sock, clientaddr, i };
                     new_client_thread.detach();
 
@@ -163,6 +205,7 @@ int main() {
                     break;
                 }
             }
+            socket_mutex.unlock();
         }
     }
 
