@@ -10,6 +10,7 @@
 
 #include <list>
 #include <ctime>
+#include "../../protocol.h"
 
 
 class GameScene : public Scene {
@@ -53,6 +54,9 @@ public:
     void connect();
     void disconnect();
 
+    CS_ACTION_PACKET BuildActionPacket();
+	void SendActionPacket();
+
     void update(const POINT& point);
 
     void togglePauseState();
@@ -85,5 +89,6 @@ public:
 
     ButtonID clickL(const POINT& point);
     ButtonID clickR(const POINT& point);
-    void mouseMove(const POINT& point);
+    //void mouseMove(const POINT& point);
+    virtual void mouseMove(const POINT& point);
 };
