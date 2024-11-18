@@ -6,6 +6,7 @@
 
 #include "Common.h"
 #include "Game/World.h"
+#include "../protocol.h"
 #include "Util.h"
 #include "../protocol.h"
 
@@ -28,7 +29,7 @@ void run_game(World& world) {
     auto elapsed = 0;
     int update_time = fps(30);
 
-    // °íÁ¤ÇÁ·¹ÀÓ ¾÷µ¥ÀÌÆ®
+    // ê³ ì •í”„ë ˆì„ ì—…ë°ì´íŠ¸
     while(true) {
         elapsed += clock() - timer;
         timer = clock();
@@ -42,7 +43,7 @@ void run_game(World& world) {
 
         auto players = world.getPlayers();
 
-        // World Á¤º¸ Àü¼Û
+        // World ì •ë³´ ì „ì†¡
         SC_WORLD_PACKET packet;
         packet.type = SC_WORLD;
         packet.object_num = static_cast<int>(players.size());
@@ -62,19 +63,19 @@ void run_game(World& world) {
                 obj.radius = cell->getRadius();
                 obj.color = cell->color;
 
-                // ¹öÆÛ°¡ ³ÑÄ¥¼öµµ ÀÖ´Ù.
+                // ë²„í¼ê°€ ë„˜ì¹ ìˆ˜ë„ ìˆë‹¤.
                 memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
                 offset += sizeof(SC_OBJECT);
             }
         }
 
-        // °¢ ¼ÒÄÏ¿¡ µ¥ÀÌÅÍ Àü¼Û
+        // ê° ì†Œì¼“ì— ë°ì´í„° ì „ì†¡
         for(auto& sock : sockets) {
             if(sock == INVALID_SOCKET) {
                 continue;
             }
 
-            // µ¥ÀÌÅÍ Àü¼Û(send()
+            // ë°ì´í„° ì „ì†¡(send()
             int retval = send(sock, buf, sizeof(SC_WORLD_PACKET), 0);
             if(retval == SOCKET_ERROR) {
                 err_display("send()");
@@ -84,46 +85,60 @@ void run_game(World& world) {
 }
 
 
-void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
+void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
     char buf[PACKETSIZEMAX];
 
-    // Á¢¼ÓÇÑ Å¬¶óÀÌ¾ğÆ® Á¤º¸ Ãâ·Â
+    // ì ‘ì†í•œ í´ë¼ì´ì–¸íŠ¸ ì •ë³´ ì¶œë ¥
     char addr[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
     printf("%s:%d\n", addr, ntohs(clientaddr.sin_port));
 
-    // World¿¡ ÇÃ·¹ÀÌ¾î Ãß°¡
+    // Worldì— í”Œë ˆì´ì–´ ì¶”ê°€
     world.addPlayer(id);
     cout << "Players: \n";
     for(const auto& p : world.getPlayers()) {
         printf(" - id: %2d\n", p.first);
     }
 
-    // Å¬¶óÀÌ¾ğÆ®¿Í µ¥ÀÌÅÍ Åë½Å
+    // í´ë¼ì´ì–¸íŠ¸ì™€ ë°ì´í„° í†µì‹ 
     while(true) {
-        // Å¬¶óÀÌ¾ğÆ® Á¤º¸ ¼ö½Å
+        // í´ë¼ì´ì–¸íŠ¸ ì •ë³´ ìˆ˜ì‹ 
         retval = recv(socket, buf, PACKETSIZEMAX, 0);
         if(retval == SOCKET_ERROR) {
             err_display("recv()");
             break;
         }
-        else if(retval == 0) {		// ¿¬°á Á¾·á
+        else if(retval == 0) {		// ì—°ê²° ì¢…ë£Œ
             break;
         }
 
-        // ÇÃ·¹ÀÌ¾î Á¤º¸ ¾÷µ¥ÀÌÆ®
-        // ...
+        struct Packet { // protocol.h ì˜ CS_ACTION_PACKET ìœ¼ë¡œ ë“¤ì–´ì˜¤ëŠ” ì •ë³´ì¼ ì˜ˆì •
+            LONG x;
+            LONG y;
+        }* p;
+        p = reinterpret_cast<Packet*>(buf);
+        cout << p->x << ", " << p->y << endl;
+
+        // ë°ì´í„° ë³´ë‚´ê¸°
+        retval = send(socket, buf, retval, 0);
+        if(retval == SOCKET_ERROR) {
+            err_display("send()");
+            break;
+        }
+
+        //player data update
+        world.setPlayerDestination(id, p->x, p->y);
     }
 
-    // World¿¡¼­ ÇÃ·¹ÀÌ¾î »èÁ¦
+    // Worldì—ì„œ í”Œë ˆì´ì–´ ì‚­ì œ
     world.removePlayer(id);
     cout << "Players: \n";
     for(const auto& p : world.getPlayers()) {
         printf(" - id: %2d\n", p.first);
     }
 
-    // Åë½Å ¼ÒÄÏ ´İ±â
+    // í†µì‹  ì†Œì¼“ ë‹«ê¸°
     closesocket(socket);
 
     socket_mutex.lock();
@@ -131,30 +146,19 @@ void handle_connection(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     socket_mutex.unlock();
 }
 
-
-int main() {
-    // ------------------------------------- °ÔÀÓ ½ÇÇà -------------------------------------
-    //World world;
-    world.setUp();
-
-    thread game_logic { [&]() { run_game(world); } };
-    game_logic.detach();
-
-
-    // ------------------------------------- ³×Æ®¿öÅ© ÀÛ¾÷ -------------------------------------
+int NetworkInitialize() {
     for(auto& sock : sockets) {
         sock = INVALID_SOCKET;
     }
 
-
     WSADATA wsa;
-    if(WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-        cout << "À©¼Ó ÃÊ±âÈ­ ½ÇÆĞ" << endl;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+        cout << "ìœˆì† ì´ˆê¸°í™” ì‹¤íŒ¨" << endl;
         return 1;
     }
 
     SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
-    if(listen_sock == INVALID_SOCKET) {
+    if (listen_sock == INVALID_SOCKET) {
         err_quit("socket()");
     }
 
@@ -167,38 +171,39 @@ int main() {
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serveraddr.sin_port = htons(SERVERPORT);
     retval = bind(listen_sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-    if(retval == SOCKET_ERROR) {
+    if (retval == SOCKET_ERROR) {
         err_quit("bind()");
     }
 
     // listen()
     retval = listen(listen_sock, SOMAXCONN);
-    if(retval == SOCKET_ERROR) {
+    if (retval == SOCKET_ERROR) {
         err_quit("listen()");
     }
 
-    // µ¥ÀÌÅÍ Åë½Å¿¡ »ç¿ëÇÒ ¼ÒÄ¹
+    // ë°ì´í„° í†µì‹ ì— ì‚¬ìš©í•  ì†Œìº£
     SOCKET client_sock;
     struct sockaddr_in clientaddr;
     int addrlen;
 
-    while(true) {
+    while (true) {
         // accept()
         addrlen = sizeof(clientaddr);
         client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
-        if(client_sock == INVALID_SOCKET) {
+        if (client_sock == INVALID_SOCKET) {
             err_display("accept()");
             break;
         }
 
-        // ½½·ÔÀÌ ºô¶§±îÁö ´ë±â
+        // ìŠ¬ë¡¯ì´ ë¹Œë•Œê¹Œì§€ ëŒ€ê¸°
         bool wait = true;
+
         while(wait) {
             socket_mutex.lock();
             for(int i=0; i<MAX_CLIENTS; ++i) {
                 if(sockets[i] == INVALID_SOCKET) {
                     sockets[i] = client_sock;
-                    std::thread new_client_thread { handle_connection, client_sock, clientaddr, i };
+                    std::thread new_client_thread { ProcessClient, client_sock, clientaddr, i };
                     new_client_thread.detach();
 
                     wait = false;
@@ -209,8 +214,21 @@ int main() {
         }
     }
 
-    // ´ë±â ¼ÒÄÏ ´İ±â
+    // ëŒ€ê¸° ì†Œì¼“ ë‹«ê¸°
     closesocket(listen_sock);
 
     WSACleanup();
+}
+
+int main() {
+    // ------------------------------------- ê²Œì„ ì‹¤í–‰ -------------------------------------
+    //World world;
+    world.setUp();
+
+    thread game_logic { [&]() { run_game(world); } };
+    game_logic.detach();
+
+
+    // ------------------------------------- ë„¤íŠ¸ì›Œí¬ ì‘ì—… -------------------------------------
+    NetworkInitialize();
 }

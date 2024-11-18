@@ -3,7 +3,6 @@
 #define CS_ACTION 1
 #define SC_WORLD 2
 
-
 #pragma pack(push, 1)
 
 
@@ -13,6 +12,7 @@ struct CS_ACTION_PACKET {
 	float mx;   // [-1.0f ~ 1.0f]
 	float my;   // [-1.0f ~ 1.0f]
 };
+
 
 
 struct SC_WORLD_PACKET {

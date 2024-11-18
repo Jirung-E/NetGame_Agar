@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // File name: NetworkFunction.h
 // Created: 2045-11-09 18:09:00
-// Author: À±¿µ¹Î
-// Description: ³×Æ®¿öÅ© ÇÔ¼ö¸¦ Á¤ÀÇÇÑ Çì´õ ÆÄÀÏÀÔ´Ï´Ù.
+// Author: ìœ¤ì˜ë¯¼
+// Description: ë„¤íŠ¸ì›Œí¬ í•¨ìˆ˜ë¥¼ ì •ì˜í•œ í—¤ë” íŒŒì¼ì…ë‹ˆë‹¤.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Common.h"
@@ -17,10 +17,10 @@
 extern SOCKET clientsocket;
 
 
-void NetworkInitialize();  // ³×Æ®¿öÅ© ÃÊ±âÈ­
-void NetworkFinalize();    // ³×Æ®¿öÅ© Á¾·á
+void NetworkInitialize();  // ë„¤íŠ¸ì›Œí¬ ì´ˆê¸°í™”
+void NetworkFinalize();    // ë„¤íŠ¸ì›Œí¬ ì¢…ë£Œ
 
-DWORD WINAPI RecvThread(LPVOID arg); // µ¥ÀÌÅÍ ¼ö½Å ½º·¹µå
-void ProcessPacket(char* buf);		 // ÆĞÅ¶ Ã³¸® ÇÔ¼ö
-void SendData(void* buf, int size);			 // µ¥ÀÌÅÍ Àü¼Û ÇÔ¼ö
+DWORD WINAPI RecvThread(LPVOID arg); // ë°ì´í„° ìˆ˜ì‹  ìŠ¤ë ˆë“œ
+void ProcessPacket(char* buf);		 // íŒ¨í‚· ì²˜ë¦¬ í•¨ìˆ˜
+void SendData(void* buf, int size);			 // ë°ì´í„° ì „ì†¡ í•¨ìˆ˜
 
