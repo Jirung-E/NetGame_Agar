@@ -39,6 +39,6 @@ ButtonID Scene::clickR(const POINT& point) const {
 	return None;
 }
 
-void Scene::mouseMove(const POINT& point) const {
+void Scene::mouseMove(const POINT& point)  {
 
 }

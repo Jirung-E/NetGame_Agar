@@ -2,11 +2,13 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <mutex>
 
 #include "Common.h"
 #include "Game/World.h"
 #include "../protocol.h"
 #include "Util.h"
+#include "../protocol.h"
 
 using namespace std;
 using namespace chrono;
@@ -16,7 +18,8 @@ const int SERVERPORT = 9000;
 const int PACKETSIZEMAX = 512;
 
 const int MAX_CLIENTS = 8;
-atomic_bool slot[MAX_CLIENTS];
+mutex socket_mutex;
+SOCKET sockets[MAX_CLIENTS];
 
 World world;
 
@@ -24,9 +27,9 @@ World world;
 void run_game(World& world) {
     auto timer = clock();
     auto elapsed = 0;
-    int update_time = fps(60);
+    int update_time = fps(30);
 
-    // °íÁ¤ÇÁ·¹ÀÓ ¾÷µ¥ÀÌÆ®
+    // ê³ ì •í”„ë ˆì„ ì—…ë°ì´íŠ¸
     while(true) {
         elapsed += clock() - timer;
         timer = clock();
@@ -37,6 +40,47 @@ void run_game(World& world) {
         elapsed -= update_time;
 
         world.update();
+
+        auto players = world.getPlayers();
+
+        // World ì •ë³´ ì „ì†¡
+        SC_WORLD_PACKET packet;
+        packet.type = SC_WORLD;
+        packet.object_num = static_cast<int>(players.size());
+
+        char buf[PACKETSIZEMAX];
+
+        memcpy(buf, &packet, sizeof(SC_WORLD_PACKET));
+        int offset = sizeof(SC_WORLD_PACKET);
+
+        for(const auto& p : players) {
+            auto player = p.second;
+
+            for(const auto& cell : player.cells) {
+                SC_OBJECT obj;
+                obj.x = cell->position.x;
+                obj.y = cell->position.y;
+                obj.radius = cell->getRadius();
+                obj.color = cell->color;
+
+                // ë²„í¼ê°€ ë„˜ì¹ ìˆ˜ë„ ìˆë‹¤.
+                memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
+                offset += sizeof(SC_OBJECT);
+            }
+        }
+
+        // ê° ì†Œì¼“ì— ë°ì´í„° ì „ì†¡
+        for(auto& sock : sockets) {
+            if(sock == INVALID_SOCKET) {
+                continue;
+            }
+
+            // ë°ì´í„° ì „ì†¡(send()
+            int retval = send(sock, buf, sizeof(SC_WORLD_PACKET), 0);
+            if(retval == SOCKET_ERROR) {
+                err_display("send()");
+            }
+        }
     }
 }
 
@@ -45,37 +89,38 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
     char buf[PACKETSIZEMAX];
 
-    // Á¢¼ÓÇÑ Å¬¶óÀÌ¾ğÆ® Á¤º¸ Ãâ·Â
+    // ì ‘ì†í•œ í´ë¼ì´ì–¸íŠ¸ ì •ë³´ ì¶œë ¥
     char addr[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
     printf("%s:%d\n", addr, ntohs(clientaddr.sin_port));
 
+    // Worldì— í”Œë ˆì´ì–´ ì¶”ê°€
     world.addPlayer(id);
     cout << "Players: \n";
     for(const auto& p : world.getPlayers()) {
         printf(" - id: %2d\n", p.first);
     }
 
-    // Å¬¶óÀÌ¾ğÆ®¿Í µ¥ÀÌÅÍ Åë½Å
+    // í´ë¼ì´ì–¸íŠ¸ì™€ ë°ì´í„° í†µì‹ 
     while(true) {
-        // µ¥ÀÌÅÍ ¹Ş±â
+        // í´ë¼ì´ì–¸íŠ¸ ì •ë³´ ìˆ˜ì‹ 
         retval = recv(socket, buf, PACKETSIZEMAX, 0);
         if(retval == SOCKET_ERROR) {
             err_display("recv()");
             break;
         }
-        else if(retval == 0) {		// ¿¬°á Á¾·á
+        else if(retval == 0) {		// ì—°ê²° ì¢…ë£Œ
             break;
         }
 
-        struct Packet { // protocol.h ÀÇ CS_ACTION_PACKET À¸·Î µé¾î¿À´Â Á¤º¸ÀÏ ¿¹Á¤
+        struct Packet { // protocol.h ì˜ CS_ACTION_PACKET ìœ¼ë¡œ ë“¤ì–´ì˜¤ëŠ” ì •ë³´ì¼ ì˜ˆì •
             LONG x;
             LONG y;
         }* p;
         p = reinterpret_cast<Packet*>(buf);
         cout << p->x << ", " << p->y << endl;
 
-        // µ¥ÀÌÅÍ º¸³»±â
+        // ë°ì´í„° ë³´ë‚´ê¸°
         retval = send(socket, buf, retval, 0);
         if(retval == SOCKET_ERROR) {
             err_display("send()");
@@ -84,25 +129,31 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
 
         //player data update
         world.setPlayerDestination(id, p->x, p->y);
-
     }
 
+    // Worldì—ì„œ í”Œë ˆì´ì–´ ì‚­ì œ
     world.removePlayer(id);
     cout << "Players: \n";
     for(const auto& p : world.getPlayers()) {
         printf(" - id: %2d\n", p.first);
     }
 
-    // Åë½Å ¼ÒÄÏ ´İ±â
+    // í†µì‹  ì†Œì¼“ ë‹«ê¸°
     closesocket(socket);
 
-    slot[id] = false;
+    socket_mutex.lock();
+    sockets[id] = INVALID_SOCKET;
+    socket_mutex.unlock();
 }
 
 int NetworkInitialize() {
+    for(auto& sock : sockets) {
+        sock = INVALID_SOCKET;
+    }
+
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-        cout << "À©¼Ó ÃÊ±âÈ­ ½ÇÆĞ" << endl;
+        cout << "ìœˆì† ì´ˆê¸°í™” ì‹¤íŒ¨" << endl;
         return 1;
     }
 
@@ -130,7 +181,7 @@ int NetworkInitialize() {
         err_quit("listen()");
     }
 
-    // µ¥ÀÌÅÍ Åë½Å¿¡ »ç¿ëÇÒ ¼ÒÄ¹
+    // ë°ì´í„° í†µì‹ ì— ì‚¬ìš©í•  ì†Œìº£
     SOCKET client_sock;
     struct sockaddr_in clientaddr;
     int addrlen;
@@ -144,31 +195,33 @@ int NetworkInitialize() {
             break;
         }
 
-        // ½½·ÔÀÌ ºô¶§±îÁö ´ë±â
+        // ìŠ¬ë¡¯ì´ ë¹Œë•Œê¹Œì§€ ëŒ€ê¸°
         bool wait = true;
-        while (wait) {
-            for (int i = 0; i < MAX_CLIENTS; ++i) {
-                // ½½·ÔÀÌ ºñ¾îÀÖÀ¸¸é ´Ù¿î·Îµå ½ÃÀÛ
-                if (slot[i] == false) {
-                    slot[i] = true;
-                    std::thread new_client_thread{ProcessClient, client_sock, clientaddr, i };
+
+        while(wait) {
+            socket_mutex.lock();
+            for(int i=0; i<MAX_CLIENTS; ++i) {
+                if(sockets[i] == INVALID_SOCKET) {
+                    sockets[i] = client_sock;
+                    std::thread new_client_thread { ProcessClient, client_sock, clientaddr, i };
                     new_client_thread.detach();
 
                     wait = false;
                     break;
                 }
             }
+            socket_mutex.unlock();
         }
     }
 
-    // ´ë±â ¼ÒÄÏ ´İ±â
+    // ëŒ€ê¸° ì†Œì¼“ ë‹«ê¸°
     closesocket(listen_sock);
 
     WSACleanup();
 }
 
 int main() {
-    // ------------------------------------- °ÔÀÓ ½ÇÇà -------------------------------------
+    // ------------------------------------- ê²Œì„ ì‹¤í–‰ -------------------------------------
     //World world;
     world.setUp();
 
@@ -176,6 +229,6 @@ int main() {
     game_logic.detach();
 
 
-    // ------------------------------------- ³×Æ®¿öÅ© ÀÛ¾÷ -------------------------------------
+    // ------------------------------------- ë„¤íŠ¸ì›Œí¬ ì‘ì—… -------------------------------------
     NetworkInitialize();
 }

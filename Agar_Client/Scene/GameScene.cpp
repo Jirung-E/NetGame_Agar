@@ -36,6 +36,7 @@ GameScene::GameScene():
     game_over_message.text_color = Red;
     game_over_message.background_color = LightGray;
     game_over_message.bold = 4;
+
 }
 
 
@@ -70,6 +71,29 @@ void GameScene::connect() {
 void GameScene::disconnect() {
     NetworkFinalize();
 }
+
+CS_ACTION_PACKET GameScene::BuildActionPacket()
+{
+	CS_ACTION_PACKET packet;
+	ZeroMemory(&packet, sizeof(packet));
+	packet.type = CS_ACTION;
+	if (press_split) packet.flags |= 0x01;
+	if (press_spit) packet.flags |= 0x02;
+	packet.mx = (float)(mouse_position.x - valid_area.left) / (valid_area.right - valid_area.left) * 2 - 1.0f;
+	packet.my = (float)(mouse_position.y - valid_area.top) / (valid_area.bottom - valid_area.top) * 2 - 1.0f;
+
+    return packet;
+}
+
+void GameScene::SendActionPacket()
+{
+    CS_ACTION_PACKET packet = BuildActionPacket();
+	SendData(&packet, sizeof(CS_ACTION_PACKET));
+
+	press_split = false;
+	press_spit = false;
+}
+
 
 
 void GameScene::update(const POINT& point) {
@@ -131,6 +155,8 @@ void GameScene::updatePlayer(const POINT& point) {
         e->move(dir, map);
         e->growUp();
     }
+
+	SendActionPacket();
 }
 
 void GameScene::updateEnemy() {
