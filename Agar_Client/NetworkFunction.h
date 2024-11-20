@@ -6,7 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Common.h"
-#include "../protocol.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Network Function
@@ -23,4 +22,4 @@ void NetworkFinalize();    // 네트워크 종료
 DWORD WINAPI RecvThread(LPVOID arg); // 데이터 수신 스레드
 void ProcessPacket(char* buf);		 // 패킷 처리 함수
 void SendData(void* buf, int size);			 // 데이터 전송 함수
-
+int RecvData(char buf[]);

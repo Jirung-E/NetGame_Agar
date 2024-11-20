@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 
+#include "../protocol.h"
+
 char* SERVERIP = (char*)"127.0.0.1";
 
 WSADATA wsadata;
@@ -57,6 +59,28 @@ void SendData(void* buf, int size)
 	// 데이터 전송
 	retval = send(clientsocket, (char*)buf, size, 0);
 	if (retval == SOCKET_ERROR) err_quit("send()");
+}
+
+int RecvData(char buf[]) {
+    switch(recv(clientsocket, buf, sizeof(PACKET_HEADER), MSG_WAITALL)) {
+        case SOCKET_ERROR:
+            err_quit("recv()");
+            return -1;
+        case 0:
+            return 0;
+		default:
+            PACKET_HEADER* header = (PACKET_HEADER*)buf;
+            unsigned short int size = header->size;
+			switch(recv(clientsocket, buf + sizeof(PACKET_HEADER), size - sizeof(PACKET_HEADER), MSG_WAITALL)) {
+				case SOCKET_ERROR:
+					err_quit("recv()");
+					return -1;
+				case 0:
+					return 0;
+				default:
+					return size;
+			}
+    }
 }
 
 DWORD __stdcall RecvThread(LPVOID arg)

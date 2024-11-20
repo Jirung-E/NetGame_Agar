@@ -5,7 +5,7 @@ const int Player::merge_count_max = 500;
 
 Player::Player(const uint8_t id, const Point& position): 
     id { id },
-    color { White }, 
+    color { getRandomColor() },
     merge_count { 0 },
     destination { }
 {

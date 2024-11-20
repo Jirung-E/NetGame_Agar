@@ -9,6 +9,7 @@
 #include "../Game/Virus.h"
 
 #include <list>
+#include <unordered_map>
 #include <ctime>
 #include "../../protocol.h"
 
@@ -22,6 +23,9 @@ public:
 
 private:
     Map map;
+
+    std::unordered_map<uint8_t, Cell> objects;
+
     Virus player;
     std::list<EnemyCell*> enemies;
     std::list<Trap*> traps;
@@ -44,6 +48,8 @@ private:
     bool press_split;
     Point mouse_position;
 
+    std::atomic_bool connected;
+
     //SOCKET sock;
 
 public:
@@ -56,6 +62,8 @@ public:
 
     CS_ACTION_PACKET BuildActionPacket();
 	void SendActionPacket();
+    void RecvPacket();
+    void ProcessPacket(char* buf);
 
     void update(const POINT& point);
 
