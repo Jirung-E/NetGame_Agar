@@ -5,6 +5,7 @@
 #include "../Util.h"
 
 #include <sstream>
+#include <thread>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -41,6 +42,8 @@ GameScene::GameScene():
 
 
 void GameScene::setUp() {
+    objects.clear();
+
     player.cells.clear();
     player.cells.push_back(new Cell { Point { map.getWidth()/2.0, map.getHeight()/2.0 } });
     player.cells.front()->color = player.color;
@@ -66,9 +69,16 @@ void GameScene::setUp() {
 
 void GameScene::connect() {
     NetworkInitialize();
+    
+    connected = true;
+
+    std::thread recv_thread { &GameScene::RecvPacket, this };
+    recv_thread.detach();
 }
 
 void GameScene::disconnect() {
+    connected = false;
+    
     NetworkFinalize();
 }
 
@@ -76,7 +86,8 @@ CS_ACTION_PACKET GameScene::BuildActionPacket()
 {
 	CS_ACTION_PACKET packet;
 	ZeroMemory(&packet, sizeof(packet));
-	packet.type = CS_ACTION;
+	packet.header.type = CS_ACTION;
+    packet.header.size = sizeof(packet);
 	if (press_split) packet.flags |= 0x01;
 	if (press_spit) packet.flags |= 0x02;
 	packet.mx = (float)(mouse_position.x - valid_area.left) / (valid_area.right - valid_area.left) * 2 - 1.0f;
@@ -94,6 +105,54 @@ void GameScene::SendActionPacket()
 	press_spit = false;
 }
 
+void GameScene::RecvPacket() {
+    int retval;
+
+    // 데이터 통신에 사용할 변수
+    char buf[BUFSIZE];
+    size_t len;
+
+    while(connected) {
+        // 데이터 수신
+        retval = RecvData(buf);
+
+        switch(retval) {
+            case 0:
+                break;
+            case SOCKET_ERROR:
+                err_quit("recv()");
+                break;
+            default:
+                // 데이터 처리
+                this->ProcessPacket(buf);
+                break;
+        }
+
+    }
+}
+
+void GameScene::ProcessPacket(char* buf) {
+    // 패킷 분석
+    
+    // 패킷 처리
+
+    char type = buf[0];
+    switch(type) {
+        case SC_WORLD: {
+            SC_WORLD_PACKET* packet = (SC_WORLD_PACKET*)buf;
+            SC_OBJECT* objects = (SC_OBJECT*)(buf + sizeof(SC_WORLD_PACKET));
+            for(int i=0; i<packet->object_num; ++i) {
+                SC_OBJECT& obj = objects[i];
+                Cell cell { Point { obj.x, obj.y }, obj.radius };
+                cell.color = obj.color;
+                this->objects.insert_or_assign(obj.id, cell);
+            }
+            //Beep(1000, 100);
+            break;
+        }
+    }
+}
+
 
 
 void GameScene::update(const POINT& point) {
@@ -106,10 +165,10 @@ void GameScene::update(const POINT& point) {
         start_time = clock();
         updatePlayer(point);
     }
-    updateFeeds();
-    updateEnemy();
-    updateTraps();
-    collisionCheck();
+    //updateFeeds();
+    //updateEnemy();
+    //updateTraps();
+    //collisionCheck();
 }
 
 void GameScene::togglePauseState() {
@@ -493,49 +552,54 @@ void GameScene::draw(const HDC& hdc) const {
     RECT view_area = getViewArea();
 
     map.draw(hdc, view_area);
-    for(auto e : feeds) {
-        e->draw(hdc, map, view_area);
+
+    for(auto& e : objects) {
+        e.second.draw(hdc, map, view_area);
     }
-    for(auto e : enemies) {
-        e->draw(hdc, map, view_area);
-    }
-    if(!game_over) {
-        player.draw(hdc, map, view_area);
-    }
-    for(auto e : traps) {
-        e->draw(hdc, map, view_area);
-    }
+
+    //for(auto e : feeds) {
+    //    e->draw(hdc, map, view_area);
+    //}
+    //for(auto e : enemies) {
+    //    e->draw(hdc, map, view_area);
+    //}
+    //if(!game_over) {
+    //    player.draw(hdc, map, view_area);
+    //}
+    //for(auto e : traps) {
+    //    e->draw(hdc, map, view_area);
+    //}
 
     // 플레이어 이동방향
-    if(!game_over) {
-        for(auto e : player.cells) {
-            Vector pv = e->velocity;
-            if(pv.scalar() > 1) {
-                pv = pv.unit();
-            }
-            Vector v = pv * (view_area.right-view_area.left)/map.getWidth() * e->getRadius()*2;
-            if(v.scalar() != 0) {
-                HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * e->getRadius() / 3, LightGray);
-                HPEN old = (HPEN)SelectObject(hdc, pen);
+    //if(!game_over) {
+    //    for(auto e : player.cells) {
+    //        Vector pv = e->velocity;
+    //        if(pv.scalar() > 1) {
+    //            pv = pv.unit();
+    //        }
+    //        Vector v = pv * (view_area.right-view_area.left)/map.getWidth() * e->getRadius()*2;
+    //        if(v.scalar() != 0) {
+    //            HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * e->getRadius() / 3, LightGray);
+    //            HPEN old = (HPEN)SelectObject(hdc, pen);
 
-                SetROP2(hdc, R2_MASKPEN);
+    //            SetROP2(hdc, R2_MASKPEN);
 
-                POINT p = e->absolutePosition(map, view_area);
-                MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-                Vector v1 = { -v.x/3, -v.y/3 };
-                double th = atan(v.y/v.x);
-                if(v.x < 0) th += M_PI;
-                LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
-                MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-                LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
+    //            POINT p = e->absolutePosition(map, view_area);
+    //            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+    //            Vector v1 = { -v.x/3, -v.y/3 };
+    //            double th = atan(v.y/v.x);
+    //            if(v.x < 0) th += M_PI;
+    //            LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
+    //            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+    //            LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
 
-                SetROP2(hdc, R2_COPYPEN);
+    //            SetROP2(hdc, R2_COPYPEN);
 
-                SelectObject(hdc, old);
-                DeleteObject(pen);
-            }
-        }
-    }
+    //            SelectObject(hdc, old);
+    //            DeleteObject(pen);
+    //        }
+    //    }
+    //}
 
     if(show_score) {
         drawScore(hdc);

@@ -32,7 +32,7 @@ public:
     void addPlayer(uint8_t id);
     void removePlayer(uint8_t id);
     const std::unordered_map<uint8_t, Player>& getPlayers() const;
-    void setPlayerDestination(uint8_t id, LONG x, LONG y);
+    void setPlayerDestination(uint8_t id, const Point& dest);
 
 
 

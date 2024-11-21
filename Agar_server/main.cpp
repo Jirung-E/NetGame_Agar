@@ -8,7 +8,6 @@
 #include "Game/World.h"
 #include "../protocol.h"
 #include "Util.h"
-#include "../protocol.h"
 
 using namespace std;
 using namespace chrono;
@@ -45,12 +44,11 @@ void run_game(World& world) {
 
         // World 정보 전송
         SC_WORLD_PACKET packet;
-        packet.type = SC_WORLD;
+        packet.header.type = SC_WORLD;
         packet.object_num = static_cast<int>(players.size());
 
         char buf[PACKETSIZEMAX];
 
-        memcpy(buf, &packet, sizeof(SC_WORLD_PACKET));
         int offset = sizeof(SC_WORLD_PACKET);
 
         for(const auto& p : players) {
@@ -58,16 +56,20 @@ void run_game(World& world) {
 
             for(const auto& cell : player.cells) {
                 SC_OBJECT obj;
+                obj.id = player.id;
                 obj.x = cell->position.x;
                 obj.y = cell->position.y;
                 obj.radius = cell->getRadius();
-                obj.color = cell->color;
+                obj.color = player.color;
 
                 // 버퍼가 넘칠수도 있다.
                 memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
                 offset += sizeof(SC_OBJECT);
             }
         }
+
+        packet.header.size = offset;
+        memcpy(buf, &packet, sizeof(SC_WORLD_PACKET));
 
         // 각 소켓에 데이터 전송
         for(auto& sock : sockets) {
@@ -76,10 +78,12 @@ void run_game(World& world) {
             }
 
             // 데이터 전송(send()
-            int retval = send(sock, buf, sizeof(SC_WORLD_PACKET), 0);
+            int retval = send(sock, buf, packet.header.size, 0);
             if(retval == SOCKET_ERROR) {
                 err_display("send()");
             }
+
+            //cout << "send: " << retval << endl;
         }
     }
 }
@@ -113,22 +117,17 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             break;
         }
 
-        struct Packet { // protocol.h 의 CS_ACTION_PACKET 으로 들어오는 정보일 예정
-            LONG x;
-            LONG y;
-        }* p;
-        p = reinterpret_cast<Packet*>(buf);
-        cout << p->x << ", " << p->y << endl;
+        switch(buf[0]) {
+            case CS_ACTION: {
+                CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
+                //cout << p->mx << ", " << p->my << endl;
 
-        // 데이터 보내기
-        retval = send(socket, buf, retval, 0);
-        if(retval == SOCKET_ERROR) {
-            err_display("send()");
-            break;
+                //player data update
+                world.setPlayerDestination(id, Point { p->mx, p->my });
+
+                break;
+            }
         }
-
-        //player data update
-        world.setPlayerDestination(id, p->x, p->y);
     }
 
     // World에서 플레이어 삭제
