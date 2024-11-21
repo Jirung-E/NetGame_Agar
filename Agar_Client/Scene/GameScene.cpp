@@ -78,8 +78,6 @@ void GameScene::connect() {
 
 void GameScene::disconnect() {
     connected = false;
-    
-    NetworkFinalize();
 }
 
 CS_ACTION_PACKET GameScene::BuildActionPacket()
@@ -90,8 +88,14 @@ CS_ACTION_PACKET GameScene::BuildActionPacket()
     packet.header.size = sizeof(packet);
 	if (press_split) packet.flags |= 0x01;
 	if (press_spit) packet.flags |= 0x02;
-	packet.mx = (float)(mouse_position.x - valid_area.left) / (valid_area.right - valid_area.left) * 2 - 1.0f;
-	packet.my = (float)(mouse_position.y - valid_area.top) / (valid_area.bottom - valid_area.top) * 2 - 1.0f;
+    RECT map_area = map.absoluteArea(valid_area);
+    float map_area_h = map_area.bottom - map_area.top;
+    float map_area_w = map_area.right - map_area.left;
+    packet.mx = ((float)(mouse_position.x - map_area.left) / map_area_w) * map.getWidth();
+    packet.my = ((float)(mouse_position.y - map_area.top) / map_area_h) * map.getHeight();
+    // 지금: 스크린 사이즈 정규화 한다음 맵 사이즈를 곱해서 불일치 발생
+    // 목표: 마우스 위치를 맵 상의 위치로 
+    // 맵은 좌상단이 0, 0
 
     return packet;
 }
@@ -120,15 +124,16 @@ void GameScene::RecvPacket() {
             case 0:
                 break;
             case SOCKET_ERROR:
-                err_quit("recv()");
+                err_quit("[client] recv()");
                 break;
             default:
                 // 데이터 처리
                 this->ProcessPacket(buf);
                 break;
         }
-
     }
+
+    NetworkFinalize();
 }
 
 void GameScene::ProcessPacket(char* buf) {

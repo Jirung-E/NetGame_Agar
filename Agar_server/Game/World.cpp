@@ -56,7 +56,7 @@ void World::updatePlayers() {
         for(auto& e : player.cells) {
             Point p { e->position };
             Vector dir { player.destination - e->position };
-            e->move(dir / 50, map);  // destination에 따라 이동
+            e->move(dir, map);  // destination에 따라 이동
             e->growUp();
         }
         player.update();

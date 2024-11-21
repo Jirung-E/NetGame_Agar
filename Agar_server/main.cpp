@@ -80,7 +80,7 @@ void run_game(World& world) {
             // 데이터 전송(send()
             int retval = send(sock, buf, packet.header.size, 0);
             if(retval == SOCKET_ERROR) {
-                err_display("send()");
+                err_display("[server] send()");
             }
 
             //cout << "send: " << retval << endl;
@@ -110,7 +110,7 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
         // 클라이언트 정보 수신
         retval = recv(socket, buf, PACKETSIZEMAX, 0);
         if(retval == SOCKET_ERROR) {
-            err_display("recv()");
+            err_display("[server] recv()");
             break;
         }
         else if(retval == 0) {		// 연결 종료

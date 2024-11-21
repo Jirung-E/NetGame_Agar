@@ -64,7 +64,7 @@ void SendData(void* buf, int size)
 int RecvData(char buf[]) {
     switch(recv(clientsocket, buf, sizeof(PACKET_HEADER), MSG_WAITALL)) {
         case SOCKET_ERROR:
-            err_quit("recv()");
+            err_quit("[client1] recv()");
             return -1;
         case 0:
             return 0;
@@ -73,7 +73,7 @@ int RecvData(char buf[]) {
             unsigned short int size = header->size;
 			switch(recv(clientsocket, buf + sizeof(PACKET_HEADER), size - sizeof(PACKET_HEADER), MSG_WAITALL)) {
 				case SOCKET_ERROR:
-					err_quit("recv()");
+					err_quit("[client2] recv()");
 					return -1;
 				case 0:
 					return 0;
