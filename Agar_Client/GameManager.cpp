@@ -131,15 +131,6 @@ void GameManager::timer(const HWND& hWnd, int id) {
 	case UpdateGame:
 		update(hWnd);
 		break;
-	case GenerateFeeds:
-		game_scene.randomGenFeed();
-		break;
-	case GenerateEnemy:
-		game_scene.randomGenEnemy();
-		break;
-	case GenerateTrap:
-		game_scene.randomGenTrap();
-		break;
 	}
 }
 

@@ -3,14 +3,11 @@
 #include "Scene.h"
 #include "../Game/Map.h"
 #include "../Game/Cell.h"
-#include "../Game/Feed.h"
-#include "../Game/EnemyCell.h"
-#include "../Game/Trap.h"
-#include "../Game/Virus.h"
+#include "../Game/Player.h"
 
 #include <list>
-#include <unordered_map>
 #include <ctime>
+#include <mutex>
 #include "../../protocol.h"
 
 
@@ -24,12 +21,11 @@ public:
 private:
     Map map;
 
-    std::unordered_map<uint8_t, Cell> objects;
+    uint8_t id;
+    std::list<Cell> objects;
+    Player player;
+    mutable std::mutex objects_mutex;
 
-    Virus player;
-    std::list<EnemyCell*> enemies;
-    std::list<Trap*> traps;
-    std::list<Feed*> feeds;
     Button resume_button;
     Button quit_button;
     bool paused;
@@ -41,8 +37,6 @@ private:
     double play_time;
     clock_t start_time;
     clock_t end_time;
-
-    int feed_erase_count;
 
     bool press_spit;
     bool press_split;
@@ -73,13 +67,6 @@ public:
 
 private:
     void updatePlayer(const POINT& point);
-    void updateEnemy();
-    void updateFeeds();
-    void updateTraps();
-    void collisionCheck();
-    void playerCollisionCheck();
-    void enemyCollisionCheck();
-    void trapCollisionCheck();
 
 protected:
     void draw(const HDC& hdc) const;
@@ -90,10 +77,6 @@ protected:
 
 public:
     void setCameraMode(const CameraMode& mode);
-
-    void randomGenFeed();
-    void randomGenEnemy();
-    void randomGenTrap();
 
     ButtonID clickL(const POINT& point);
     ButtonID clickR(const POINT& point);
