@@ -88,7 +88,21 @@ void run_game(World& world) {
     }
 }
 
+void ProcessPacket(int id, char* buf) {
+    char packetType = buf[0];
 
+    switch (packetType) {
+    case CS_ACTION: {
+        CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
+        //cout << p->mx << ", " << p->my << endl;
+
+        //player data update
+        world.setPlayerDestination(id, Point{ p->mx, p->my });
+
+        break;
+    }
+    }
+}
 void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
     char buf[PACKETSIZEMAX];
@@ -117,17 +131,7 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             break;
         }
 
-        switch(buf[0]) {
-            case CS_ACTION: {
-                CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
-                //cout << p->mx << ", " << p->my << endl;
-
-                //player data update
-                world.setPlayerDestination(id, Point { p->mx, p->my });
-
-                break;
-            }
-        }
+        ProcessPacket(id, buf);
     }
 
     // World에서 플레이어 삭제
