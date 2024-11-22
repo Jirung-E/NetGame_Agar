@@ -72,17 +72,19 @@ CS_ACTION_PACKET GameScene::BuildActionPacket() {
 	if (press_split) packet.flags |= 0x01;
 	if (press_spit) packet.flags |= 0x02;
 
-    RECT map_area = map.absoluteArea(valid_area);
-    double map_area_h = map_area.bottom - map_area.top;
-    double map_area_w = map_area.right - map_area.left;
-
     // ¸¶¿ì½º À§Ä¡¸¦ ¸ÊÁÂÇ¥·Î º¯È¯
     Point pdest = mouse_position;
 
+    RECT map_area { 0.0, 0.0, 0.0, 0.0 };
+    double map_area_w = 0.0;
+    double map_area_h = 0.0;
+
     switch(cam_mode) {
         case Fixed: {
-            packet.mx = ((pdest.x - map_area.left) / map_area_w) * map.getWidth();
-            packet.my = ((pdest.y - map_area.top) / map_area_h) * map.getHeight();
+            map_area = map.absoluteArea(valid_area);
+            map_area_w = map_area.right - map_area.left;
+            map_area_h = map_area.bottom - map_area.top;
+
             break;
         }
 
@@ -91,20 +93,20 @@ CS_ACTION_PACKET GameScene::BuildActionPacket() {
             RECT view_area = getViewArea();
             objects_mutex.unlock();
 
-            double view_area_w = view_area.right - view_area.left;
-            double view_area_h = view_area.bottom - view_area.top;
-
-            // È®ÀåµÈ ¸Ê¿¡¼­ÀÇ ¸¶¿ì½º À§Ä¡
-            pdest.x = pdest.x - view_area.left;
-            pdest.y = pdest.y - view_area.top;
-
-            // ¸Ê ÁÂÇ¥·Î º¯È¯
-            packet.mx = ((pdest.x - map_area.left) / view_area_w) * map.getWidth();
-            packet.my = ((pdest.y - map_area.top) / view_area_h) * map.getHeight();
+            map_area = map.absoluteArea(view_area);
+            map_area_w = map_area.right - map_area.left;
+            map_area_h = map_area.bottom - map_area.top;
 
             break;
         }
+
+        default:
+            err_quit("Invalid Camera Mode");
     }
+
+    // ¸Ê ÁÂÇ¥·Î º¯È¯
+    packet.mx = ((pdest.x - map_area.left) / map_area_w) * map.getWidth();
+    packet.my = ((pdest.y - map_area.top) / map_area_h) * map.getHeight();
 
     return packet;
 }
