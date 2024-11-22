@@ -77,8 +77,34 @@ CS_ACTION_PACKET GameScene::BuildActionPacket() {
     double map_area_w = map_area.right - map_area.left;
 
     // 마우스 위치를 맵좌표로 변환
-    packet.mx = ((mouse_position.x - map_area.left) / map_area_w) * map.getWidth();
-    packet.my = ((mouse_position.y - map_area.top) / map_area_h) * map.getHeight();
+    Point pdest = mouse_position;
+
+    switch(cam_mode) {
+        case Fixed: {
+            packet.mx = ((pdest.x - map_area.left) / map_area_w) * map.getWidth();
+            packet.my = ((pdest.y - map_area.top) / map_area_h) * map.getHeight();
+            break;
+        }
+
+        case Dynamic: {
+            objects_mutex.lock();
+            RECT view_area = getViewArea();
+            objects_mutex.unlock();
+
+            double view_area_w = view_area.right - view_area.left;
+            double view_area_h = view_area.bottom - view_area.top;
+
+            // 확장된 맵에서의 마우스 위치
+            pdest.x = pdest.x - view_area.left;
+            pdest.y = pdest.y - view_area.top;
+
+            // 맵 좌표로 변환
+            packet.mx = ((pdest.x - map_area.left) / view_area_w) * map.getWidth();
+            packet.my = ((pdest.y - map_area.top) / view_area_h) * map.getHeight();
+
+            break;
+        }
+    }
 
     return packet;
 }
@@ -267,7 +293,7 @@ RECT GameScene::getViewArea() const {
             double rm = sqrt(pow(horizontal_length/map.getWidth(), 2) + pow(vertical_length/map.getHeight(), 2))/2;
             double w = horizontal_length/map.getWidth() * (-(rm-20*r0) / pow(r0-rm, 2) * pow(sqrt(player.getSize()) - rm, 2) + rm);
             //double w = horizontal_length/map.getWidth() * (10*r0*pow(M_E, -(player.getRadius()-r0)) + 10*player.getRadius());
-            double W = valid_area.left + horizontal_length/2.0;
+            double W = valid_area.left + horizontal_length/2;
             double A = W*(W/w - 1);
 
             // 플레이어가 중앙에 오도록 평행이동

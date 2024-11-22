@@ -120,7 +120,7 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
         switch(buf[0]) {
             case CS_ACTION: {
                 CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
-                //cout << p->mx << ", " << p->my << endl;
+                cout << p->mx << ", " << p->my << endl;
 
                 //player data update
                 world.setPlayerDestination(id, Point { p->mx, p->my });
