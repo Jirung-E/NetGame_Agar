@@ -98,6 +98,22 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
     printf("%s:%d\n", addr, ntohs(clientaddr.sin_port));
 
+    SC_INIT_PACKET init_packet;
+    init_packet.header.type = SC_INIT;
+    init_packet.header.size = sizeof(SC_INIT_PACKET);
+    init_packet.id = id;
+    retval = send(socket, (const char*)&init_packet, init_packet.header.size, 0);
+    switch(retval) {
+        case SOCKET_ERROR:
+            err_display("[server] send()");
+            break;
+        case 0:
+            err_display("[server] send()");
+            break;
+        default:
+            break;
+    }
+
     // World에 플레이어 추가
     world.addPlayer(id);
     cout << "Players: \n";
@@ -120,7 +136,7 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
         switch(buf[0]) {
             case CS_ACTION: {
                 CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
-                cout << p->mx << ", " << p->my << endl;
+                //cout << p->mx << ", " << p->my << endl;
 
                 //player data update
                 world.setPlayerDestination(id, Point { p->mx, p->my });

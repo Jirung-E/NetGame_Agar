@@ -2,6 +2,7 @@
 
 #define CS_ACTION 1
 #define SC_WORLD 2
+#define SC_INIT 3
 
 #pragma pack(push, 1)
 
@@ -9,6 +10,12 @@
 struct PACKET_HEADER {
 	char type;
 	unsigned short int size;		// 패킷 헤더 + 데이터 크기
+};
+
+
+struct SC_INIT_PACKET {
+    PACKET_HEADER header;
+    int id;
 };
 
 

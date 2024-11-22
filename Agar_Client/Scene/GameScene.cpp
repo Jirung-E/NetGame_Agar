@@ -151,6 +151,11 @@ void GameScene::ProcessPacket(char* buf) {
 
     char type = buf[0];
     switch(type) {
+        case SC_INIT: {
+            SC_INIT_PACKET* packet = (SC_INIT_PACKET*)buf;
+            id = packet->id;
+            break;
+        }
         case SC_WORLD: {
             SC_WORLD_PACKET* packet = (SC_WORLD_PACKET*)buf;
             SC_OBJECT* objects = (SC_OBJECT*)(buf + sizeof(SC_WORLD_PACKET));
