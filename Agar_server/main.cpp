@@ -20,7 +20,28 @@ const int MAX_CLIENTS = 8;
 mutex socket_mutex;
 SOCKET sockets[MAX_CLIENTS];
 
+const uint8_t TRAP_ID = 100;
+const uint8_t FEED_ID = 200;
+
 World world;
+
+
+void send_packet(SOCKET socket, const char* buf, int size) {
+    // 각 소켓에 데이터 전송
+    for(auto& sock : sockets) {
+        if(sock == INVALID_SOCKET) {
+            continue;
+        }
+
+        // 데이터 전송(send()
+        int retval = send(sock, buf, size, 0);
+        if(retval == SOCKET_ERROR) {
+            err_display("[server] send()");
+        }
+
+        //cout << "send: " << retval << endl;
+    }
+}
 
 
 void run_game(World& world) {
@@ -38,14 +59,16 @@ void run_game(World& world) {
 
         elapsed -= update_time;
 
-        world.update();
+        world.update(update_time);
 
         auto players = world.getPlayers();
+        auto traps = world.getTraps();
+        auto feeds = world.getFeeds();
 
         // World 정보 전송
         SC_WORLD_PACKET packet;
         packet.header.type = SC_WORLD;
-        packet.object_num = static_cast<int>(players.size());
+        packet.object_num = 0;
 
         char buf[PACKETSIZEMAX];
 
@@ -63,28 +86,53 @@ void run_game(World& world) {
                 obj.color = player.color;
 
                 // 버퍼가 넘칠수도 있다.
+                if(offset + sizeof(SC_OBJECT) > PACKETSIZEMAX) {
+                    break;
+                }
                 memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
                 offset += sizeof(SC_OBJECT);
+                packet.object_num++;
             }
         }
+
+        for(const auto& cell : traps) {
+            SC_OBJECT obj;
+            obj.id = TRAP_ID;
+            obj.x = cell->position.x;
+            obj.y = cell->position.y;
+            obj.radius = cell->getRadius();
+            obj.color = cell->color;
+
+            // 버퍼가 넘칠수도 있다.
+            if(offset + sizeof(SC_OBJECT) > PACKETSIZEMAX) {
+                break;
+            }
+            memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
+            offset += sizeof(SC_OBJECT);
+            packet.object_num++;
+        }
+
+        //for(const auto& cell : feeds) {
+        //    SC_OBJECT obj;
+        //    obj.id = TRAP_ID;
+        //    obj.x = cell->position.x;
+        //    obj.y = cell->position.y;
+        //    obj.radius = cell->getRadius();
+        //    obj.color = cell->color;
+
+        //    // 버퍼가 넘칠수도 있다.
+        //    if(offset + sizeof(SC_OBJECT) > PACKETSIZEMAX/2) {
+        //        break;
+        //    }
+        //    memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
+        //    offset += sizeof(SC_OBJECT);
+        //    packet.object_num++;
+        //}
 
         packet.header.size = offset;
         memcpy(buf, &packet, sizeof(SC_WORLD_PACKET));
 
-        // 각 소켓에 데이터 전송
-        for(auto& sock : sockets) {
-            if(sock == INVALID_SOCKET) {
-                continue;
-            }
-
-            // 데이터 전송(send()
-            int retval = send(sock, buf, packet.header.size, 0);
-            if(retval == SOCKET_ERROR) {
-                err_display("[server] send()");
-            }
-
-            //cout << "send: " << retval << endl;
-        }
+        send_packet(INVALID_SOCKET, buf, packet.header.size);
     }
 }
 

@@ -22,18 +22,25 @@ private:
 
     int feed_erase_count;
 
+    const int trap_gen_interval;
+    int trap_gen_timer;
+    const int feed_gen_interval;
+    int feed_gen_timer;
+
 public:
     World();
 
 public:
     void setUp();
-    void update();
+    void update(int elapsed);
 
     void addPlayer(uint8_t id);
     void removePlayer(uint8_t id);
     const std::unordered_map<uint8_t, Player>& getPlayers() const;
     void setPlayerDestination(uint8_t id, const Point& dest);
 
+    const std::list<Trap*>& getTraps() const;
+    const std::list<Feed*>& getFeeds() const;
 
 
 private:

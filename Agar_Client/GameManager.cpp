@@ -153,10 +153,6 @@ void GameManager::gameStart(const HWND& hWnd) {
 	game_scene.setUp();
 	game_scene.connect();
     current_scene = &game_scene;
-
-	SetTimer(hWnd, GenerateFeeds, 2000, NULL);
-	SetTimer(hWnd, GenerateEnemy, 5000, NULL);
-	SetTimer(hWnd, GenerateTrap, 4000, NULL);
 }
 
 void GameManager::lockCursor(const HWND& hWnd) {

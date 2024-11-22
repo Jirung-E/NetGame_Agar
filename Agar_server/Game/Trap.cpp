@@ -6,7 +6,7 @@
 
 Trap::Trap(const Point& position) : Cell { position, 0.6 }, stroll_count { 0 }, spawn_animation_count { 0 }, anim_max { 200 } {
     invincible = true;
-    color = getRandomColor(0, 0, 0, Range { 50, 100 });
+    color = RGB(0, 0, 0);
 }
 
 

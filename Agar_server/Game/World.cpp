@@ -3,7 +3,11 @@
 
 World::World():
     map { },
-    feed_erase_count { 0 }
+    feed_erase_count { 0 },
+    trap_gen_interval { 4000 },
+    trap_gen_timer { 0 },
+    feed_gen_interval { 2000 },
+    feed_gen_timer { 0 }
 {
 
 }
@@ -18,7 +22,18 @@ void World::setUp() {
     }
 }
 
-void World::update() {
+void World::update(int elapsed) {
+    trap_gen_timer += elapsed;
+    feed_gen_timer += elapsed;
+    if(trap_gen_timer >= trap_gen_interval) {
+        trap_gen_timer -= trap_gen_interval;
+        randomGenTrap();
+    }
+    if(feed_gen_timer >= feed_gen_interval) {
+        feed_gen_timer -= feed_gen_interval;
+        randomGenFeed();
+    }
+
     updatePlayers();
     updateFeeds();
     //updateEnemies();
@@ -47,6 +62,15 @@ void World::setPlayerDestination(uint8_t id, const Point& dest) {
     if(it != players.end()) {
         it->second.destination = dest;
     }
+}
+
+
+const std::list<Trap*>& World::getTraps() const {
+    return traps;
+}
+
+const std::list<Feed*>& World::getFeeds() const {
+    return feeds;
 }
 
 
@@ -379,7 +403,7 @@ void World::trapCollisionCheck() {
         //    }
         //}
 
-        for(auto e : players) {
+        for(auto& e : players) {
             auto& player = e.second;
             for(auto e_elem : player.cells) {
                 if((*iter)->collideWith(e_elem)) {
