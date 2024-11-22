@@ -128,19 +128,28 @@ void GameScene::RecvPacket() {
 
     while(connected) {
         // 데이터 수신
-        retval = RecvData(buf);
+        //retval = RecvData(buf);
 
-        switch(retval) {
-            case 0:
-                break;
-            case SOCKET_ERROR:
-                err_quit("[client] recv()");
-                break;
-            default:
-                // 데이터 처리
-                this->ProcessPacket(buf);
-                break;
+        //switch(retval) {
+        //    case 0:
+        //        break;
+        //    case SOCKET_ERROR:
+        //        err_quit("[client] recv()");
+        //        break;
+        //    default:
+        //        // 데이터 처리
+        //        this->ProcessPacket(buf);
+        //        break;
+        //}
+
+        PACKET_HEADER* packet = ::RecvPacket();
+        if(packet == nullptr) {
+            break;
         }
+
+        this->ProcessPacket(packet);
+
+        delete packet;
     }
 
     NetworkFinalize();
@@ -176,6 +185,38 @@ void GameScene::ProcessPacket(char* buf) {
                     player.addCell(&this->objects.back());
                 }
                 //this->objects.insert_or_assign(obj.id, cell);
+            }
+
+            objects_mutex.unlock();
+
+            //Beep(1000, 100);
+            break;
+        }
+    }
+}
+
+void GameScene::ProcessPacket(PACKET_HEADER* packet) {
+    switch(packet->type) {
+        case SC_INIT: {
+            SC_INIT_PACKET* p = (SC_INIT_PACKET*)packet;
+            id = p->id;
+            break;
+        }
+        case SC_WORLD: {
+            SC_WORLD_PACKET* p = (SC_WORLD_PACKET*)packet;
+
+            objects_mutex.lock();
+
+            this->objects.clear();
+            player.clearCells();
+
+            for(const auto& obj : p->objects) {
+                Cell cell { Point { obj.x, obj.y }, obj.radius };
+                cell.color = obj.color;
+                this->objects.push_back(cell);
+                if(obj.id == id) {
+                    player.addCell(&this->objects.back());
+                }
             }
 
             objects_mutex.unlock();

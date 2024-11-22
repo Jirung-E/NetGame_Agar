@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #define CS_ACTION 1
 #define SC_WORLD 2
 #define SC_INIT 3
@@ -13,8 +15,7 @@ struct PACKET_HEADER {
 };
 
 
-struct SC_INIT_PACKET {
-    PACKET_HEADER header;
+struct SC_INIT_PACKET : public PACKET_HEADER {
     int id;
 };
 
@@ -27,14 +28,6 @@ struct CS_ACTION_PACKET {
 };
 
 
-
-struct SC_WORLD_PACKET {
-	PACKET_HEADER header;
-	int object_num;
-};
-// 이 뒤로 오브젝트들의 배열이 붙어야 한다.
-
-
 struct SC_OBJECT {
 	// 타입은 필요 없다.
 	uint8_t id;
@@ -42,6 +35,23 @@ struct SC_OBJECT {
 	double y;
 	double radius;
 	COLORREF color;
+};
+
+struct SC_WORLD_PACKET : public PACKET_HEADER {
+	int object_num;
+	std::vector<SC_OBJECT> objects;
+
+public:
+	std::vector<char> serialize() {
+		std::vector<char> buffer(sizeof(PACKET_HEADER) + sizeof(int) + objects.size() * sizeof(SC_OBJECT));
+		PACKET_HEADER* header = (PACKET_HEADER*)&buffer[0];
+		header->type = SC_WORLD;
+		header->size = buffer.size();
+		*(int*)&buffer[sizeof(PACKET_HEADER)] = object_num;
+		memcpy(&buffer[sizeof(PACKET_HEADER) + sizeof(int)], objects.data(), objects.size() * sizeof(SC_OBJECT));
+
+		return buffer;
+	}
 };
 
 

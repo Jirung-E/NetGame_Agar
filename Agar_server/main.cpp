@@ -67,12 +67,8 @@ void run_game(World& world) {
 
         // World 정보 전송
         SC_WORLD_PACKET packet;
-        packet.header.type = SC_WORLD;
+        packet.type = SC_WORLD;
         packet.object_num = 0;
-
-        char buf[PACKETSIZEMAX];
-
-        int offset = sizeof(SC_WORLD_PACKET);
 
         for(const auto& p : players) {
             auto player = p.second;
@@ -85,12 +81,7 @@ void run_game(World& world) {
                 obj.radius = cell->getRadius();
                 obj.color = player.color;
 
-                // 버퍼가 넘칠수도 있다.
-                if(offset + sizeof(SC_OBJECT) > PACKETSIZEMAX) {
-                    break;
-                }
-                memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
-                offset += sizeof(SC_OBJECT);
+                packet.objects.push_back(obj);
                 packet.object_num++;
             }
         }
@@ -103,36 +94,25 @@ void run_game(World& world) {
             obj.radius = cell->getRadius();
             obj.color = cell->color;
 
-            // 버퍼가 넘칠수도 있다.
-            if(offset + sizeof(SC_OBJECT) > PACKETSIZEMAX) {
-                break;
-            }
-            memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
-            offset += sizeof(SC_OBJECT);
+            packet.objects.push_back(obj);
             packet.object_num++;
         }
 
-        //for(const auto& cell : feeds) {
-        //    SC_OBJECT obj;
-        //    obj.id = TRAP_ID;
-        //    obj.x = cell->position.x;
-        //    obj.y = cell->position.y;
-        //    obj.radius = cell->getRadius();
-        //    obj.color = cell->color;
+        for(const auto& cell : feeds) {
+            SC_OBJECT obj;
+            obj.id = TRAP_ID;
+            obj.x = cell->position.x;
+            obj.y = cell->position.y;
+            obj.radius = cell->getRadius();
+            obj.color = cell->color;
 
-        //    // 버퍼가 넘칠수도 있다.
-        //    if(offset + sizeof(SC_OBJECT) > PACKETSIZEMAX/2) {
-        //        break;
-        //    }
-        //    memcpy(buf + offset, &obj, sizeof(SC_OBJECT));
-        //    offset += sizeof(SC_OBJECT);
-        //    packet.object_num++;
-        //}
+            packet.objects.push_back(obj);
+            packet.object_num++;
+        }
 
-        packet.header.size = offset;
-        memcpy(buf, &packet, sizeof(SC_WORLD_PACKET));
+        packet.size = sizeof(PACKET_HEADER) + sizeof(int) + sizeof(SC_OBJECT)*packet.object_num;
 
-        send_packet(INVALID_SOCKET, buf, packet.header.size);
+        send_packet(INVALID_SOCKET, packet.serialize().data(), packet.size);
     }
 }
 
@@ -147,10 +127,10 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     printf("%s:%d\n", addr, ntohs(clientaddr.sin_port));
 
     SC_INIT_PACKET init_packet;
-    init_packet.header.type = SC_INIT;
-    init_packet.header.size = sizeof(SC_INIT_PACKET);
+    init_packet.type = SC_INIT;
+    init_packet.size = sizeof(SC_INIT_PACKET);
     init_packet.id = id;
-    retval = send(socket, (const char*)&init_packet, init_packet.header.size, 0);
+    retval = send(socket, (const char*)&init_packet, init_packet.size, 0);
     switch(retval) {
         case SOCKET_ERROR:
             err_display("[server] send()");

@@ -58,6 +58,7 @@ public:
 	void SendActionPacket();
     void RecvPacket();
     void ProcessPacket(char* buf);
+    void ProcessPacket(PACKET_HEADER* packet);
 
     void update(const POINT& point);
 
