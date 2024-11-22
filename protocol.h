@@ -1,7 +1,9 @@
 #pragma once
 
 #define CS_ACTION 1
-#define SC_WORLD 2
+#define CS_EXIT 2
+
+#define SC_WORLD 1
 
 #pragma pack(push, 1)
 
@@ -19,6 +21,9 @@ struct CS_ACTION_PACKET {
 	double my;   // [-1.0f ~ 1.0f]
 };
 
+struct CS_EXIT_PACKET {
+	PACKET_HEADER header;  // CS_EXIT
+};
 
 
 struct SC_WORLD_PACKET {
