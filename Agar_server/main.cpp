@@ -86,9 +86,9 @@ void run_game(World& world) {
             }
         }
 
-        for(const auto& cell : traps) {
+        for(const auto& cell : feeds) {
             SC_OBJECT obj;
-            obj.id = TRAP_ID;
+            obj.id = FEED_ID;
             obj.x = cell->position.x;
             obj.y = cell->position.y;
             obj.radius = cell->getRadius();
@@ -98,7 +98,7 @@ void run_game(World& world) {
             packet.object_num++;
         }
 
-        for(const auto& cell : feeds) {
+        for(const auto& cell : traps) {
             SC_OBJECT obj;
             obj.id = TRAP_ID;
             obj.x = cell->position.x;

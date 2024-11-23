@@ -15,6 +15,7 @@ void Trap::randomStroll() {
         spawn_animation_count++;
         return;
     }
+    color = RGB(255, 255, 255);
     if(stroll_count++ < 150) {
         return;
     }
