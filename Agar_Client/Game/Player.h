@@ -12,6 +12,7 @@ private:
 public:
     void addCell(Cell* cell);
     void clearCells();
+    const std::list<Cell*>& getCells() const;
 
     void draw(const HDC& hdc, const Map& map, const RECT& valid_area) const;
 

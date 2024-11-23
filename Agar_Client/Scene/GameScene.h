@@ -24,6 +24,7 @@ private:
     uint8_t id;
     std::list<Cell> objects;
     Player player;
+    Point player_destination;
     mutable std::mutex objects_mutex;
 
     Button resume_button;

@@ -10,6 +10,10 @@ void Player::clearCells() {
     cells.clear();
 }
 
+const std::list<Cell*>& Player::getCells() const {
+    return cells;
+}
+
 
 void Player::draw(const HDC& hdc, const Map& map, const RECT& valid_area) const {
     for(auto e : cells) {

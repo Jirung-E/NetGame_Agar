@@ -72,41 +72,9 @@ CS_ACTION_PACKET GameScene::BuildActionPacket() {
 	if (press_split) packet.flags |= 0x01;
 	if (press_spit) packet.flags |= 0x02;
 
-    // ¸¶¿ì½º À§Ä¡¸¦ ¸ÊÁÂÇ¥·Î º¯È¯
-    Point pdest = mouse_position;
-
-    RECT map_area { 0.0, 0.0, 0.0, 0.0 };
-    double map_area_w = 0.0;
-    double map_area_h = 0.0;
-
-    switch(cam_mode) {
-        case Fixed: {
-            map_area = map.absoluteArea(valid_area);
-            map_area_w = map_area.right - map_area.left;
-            map_area_h = map_area.bottom - map_area.top;
-
-            break;
-        }
-
-        case Dynamic: {
-            objects_mutex.lock();
-            RECT view_area = getViewArea();
-            objects_mutex.unlock();
-
-            map_area = map.absoluteArea(view_area);
-            map_area_w = map_area.right - map_area.left;
-            map_area_h = map_area.bottom - map_area.top;
-
-            break;
-        }
-
-        default:
-            err_quit("Invalid Camera Mode");
-    }
-
     // ¸Ê ÁÂÇ¥·Î º¯È¯
-    packet.mx = ((pdest.x - map_area.left) / map_area_w) * map.getWidth();
-    packet.my = ((pdest.y - map_area.top) / map_area_h) * map.getHeight();
+    packet.mx = player_destination.x;
+    packet.my = player_destination.y;
 
     return packet;
 }
@@ -266,6 +234,39 @@ void GameScene::resume() {
 
 
 void GameScene::updatePlayer(const POINT& point) {
+    RECT map_area { 0.0, 0.0, 0.0, 0.0 };
+    double map_area_w = 0.0;
+    double map_area_h = 0.0;
+
+    switch(cam_mode) {
+        case Fixed: {
+            map_area = map.absoluteArea(valid_area);
+            map_area_w = map_area.right - map_area.left;
+            map_area_h = map_area.bottom - map_area.top;
+
+            break;
+        }
+
+        case Dynamic: {
+            objects_mutex.lock();
+            RECT view_area = getViewArea();
+            objects_mutex.unlock();
+
+            map_area = map.absoluteArea(view_area);
+            map_area_w = map_area.right - map_area.left;
+            map_area_h = map_area.bottom - map_area.top;
+
+            break;
+        }
+
+        default:
+            err_quit("Invalid Camera Mode");
+    }
+
+    // ¸Ê ÁÂÇ¥·Î º¯È¯
+    player_destination.x = ((point.x - map_area.left) / map_area_w) * map.getWidth();
+    player_destination.y = ((point.y - map_area.top) / map_area_h) * map.getHeight();
+
 	SendActionPacket();
 }
 
@@ -284,38 +285,38 @@ void GameScene::draw(const HDC& hdc) const {
         //e.second.draw(hdc, map, view_area);
     }
 
-    objects_mutex.unlock();
-
     // ÇÃ·¹ÀÌ¾î ÀÌµ¿¹æÇâ
-    //if(!game_over) {
-    //    for(auto e : player.cells) {
-    //        Vector pv = e->velocity;
-    //        if(pv.scalar() > 1) {
-    //            pv = pv.unit();
-    //        }
-    //        Vector v = pv * (view_area.right-view_area.left)/map.getWidth() * e->getRadius()*2;
-    //        if(v.scalar() != 0) {
-    //            HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * e->getRadius() / 3, LightGray);
-    //            HPEN old = (HPEN)SelectObject(hdc, pen);
+    if(!game_over) {
+        for(auto e : player.getCells()) {
+            Vector pv = player_destination - e->position;
+            if(pv.scalar() > 1) {
+                pv = pv.unit();
+            }
+            Vector v = pv * (view_area.right-view_area.left)/map.getWidth() * e->getRadius()*2;
+            if(v.scalar() != 0) {
+                HPEN pen = CreatePen(PS_SOLID, (view_area.right-view_area.left)/map.getWidth() * e->getRadius() / 3, LightGray);
+                HPEN old = (HPEN)SelectObject(hdc, pen);
 
-    //            SetROP2(hdc, R2_MASKPEN);
+                SetROP2(hdc, R2_MASKPEN);
 
-    //            POINT p = e->absolutePosition(map, view_area);
-    //            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-    //            Vector v1 = { -v.x/3, -v.y/3 };
-    //            double th = atan(v.y/v.x);
-    //            if(v.x < 0) th += M_PI;
-    //            LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
-    //            MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
-    //            LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
+                POINT p = e->absolutePosition(map, view_area);
+                MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+                Vector v1 = { -v.x/3, -v.y/3 };
+                double th = atan(v.y/v.x);
+                if(v.x < 0) th += M_PI;
+                LineTo(hdc, p.x+v.x - v1.scalar()*cos(-M_PI/4 + th), p.y+v.y - v1.scalar()*sin(-M_PI/4 + th));
+                MoveToEx(hdc, p.x+v.x, p.y+v.y, NULL);
+                LineTo(hdc, p.x+v.x - v1.scalar()*cos(M_PI/4 + th), p.y+v.y - v1.scalar()*sin(M_PI/4 + th));
 
-    //            SetROP2(hdc, R2_COPYPEN);
+                SetROP2(hdc, R2_COPYPEN);
 
-    //            SelectObject(hdc, old);
-    //            DeleteObject(pen);
-    //        }
-    //    }
-    //}
+                SelectObject(hdc, old);
+                DeleteObject(pen);
+            }
+        }
+    }
+
+    objects_mutex.unlock();
 
     if(show_score) {
         drawScore(hdc);
