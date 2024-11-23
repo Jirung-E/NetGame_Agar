@@ -26,6 +26,7 @@
     <ClCompile Include="Game\Feed.cpp" />
     <ClCompile Include="Game\Map.cpp" />
     <ClCompile Include="Game\Object.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\Trap.cpp" />
     <ClCompile Include="Game\Virus.cpp" />
     <ClCompile Include="main.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="Game\Feed.h" />
     <ClInclude Include="Game\Map.h" />
     <ClInclude Include="Game\Object.h" />
+    <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\Trap.h" />
     <ClInclude Include="Game\Virus.h" />
     <ClInclude Include="Math\Point.h" />

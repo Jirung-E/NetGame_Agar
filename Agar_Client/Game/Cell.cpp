@@ -31,17 +31,57 @@ void Cell::draw(const HDC& hdc, const Map& map, const RECT& valid_area) const {
     int y = area.top + position.y / map.getHeight() * h;
     int r = radius / map.getWidth() * w;
 
-    HBRUSH bg_br = CreateSolidBrush(color);
-    HPEN bd_pen = CreatePen(PS_SOLID, 2, color & DarkGray);
-    HBRUSH old_br = (HBRUSH)SelectObject(hdc, bg_br);
-    HPEN old_pen = (HPEN)SelectObject(hdc, bd_pen);
+    if(color == 0) {        // Trap ready
+        SetROP2(hdc, R2_MASKPEN);
 
-    Ellipse(hdc, x-r, y-r, x+r, y+r);
+        HPEN bd_pen = CreatePen(PS_SOLID, 2, Black);
+        HPEN old_pen = (HPEN)SelectObject(hdc, bd_pen);
+        HBRUSH br = CreateHatchBrush(HS_DIAGCROSS, Gray);
+        HBRUSH old_br = (HBRUSH)SelectObject(hdc, br);
+        COLORREF old_c = SetBkColor(hdc, LightGray);
 
-    SelectObject(hdc, old_br);
-    SelectObject(hdc, old_pen);
-    DeleteObject(bd_pen);
-    DeleteObject(bg_br);
+        Ellipse(hdc, x-r, y-r, x+r, y+r);
+
+        SetBkColor(hdc, old_c);
+        SelectObject(hdc, old_br);
+        DeleteObject(br);
+        SelectObject(hdc, old_pen);
+        DeleteObject(bd_pen);
+
+        SetROP2(hdc, R2_COPYPEN);
+    }
+    else if(color == RGB(255, 255, 255)) {        // Trap
+        SetROP2(hdc, R2_MASKPEN);
+
+        HPEN bd_pen = CreatePen(PS_SOLID, 2, Black);
+        HPEN old_pen = (HPEN)SelectObject(hdc, bd_pen);
+        HBRUSH br = CreateHatchBrush(HS_DIAGCROSS, Red);
+        HBRUSH old_br = (HBRUSH)SelectObject(hdc, br);
+        COLORREF old_c = SetBkColor(hdc, DarkGray);
+
+        Ellipse(hdc, x-r, y-r, x+r, y+r);
+
+        SetBkColor(hdc, old_c);
+        SelectObject(hdc, old_br);
+        DeleteObject(br);
+        SelectObject(hdc, old_pen);
+        DeleteObject(bd_pen);
+
+        SetROP2(hdc, R2_COPYPEN);
+    }
+    else {
+        HBRUSH bg_br = CreateSolidBrush(color);
+        HPEN bd_pen = CreatePen(PS_SOLID, 2, color & DarkGray);
+        HBRUSH old_br = (HBRUSH)SelectObject(hdc, bg_br);
+        HPEN old_pen = (HPEN)SelectObject(hdc, bd_pen);
+
+        Ellipse(hdc, x-r, y-r, x+r, y+r);
+
+        SelectObject(hdc, old_br);
+        SelectObject(hdc, old_pen);
+        DeleteObject(bd_pen);
+        DeleteObject(bg_br);
+    }
 }
 
 POINT Cell::absolutePosition(const Map& map, const RECT& valid_area) const {
