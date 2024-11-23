@@ -57,6 +57,7 @@ public:
 
     CS_ACTION_PACKET BuildActionPacket();
 	void SendActionPacket();
+	void SendExitPacket();
     void RecvPacket();
     void ProcessPacket(char* buf);
     void ProcessPacket(PACKET_HEADER* packet);

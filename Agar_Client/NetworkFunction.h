@@ -14,14 +14,15 @@
 #define SERVERPORT 9000
 #define BUFSIZE    512
 
+extern char* SERVERIP;
 extern SOCKET clientsocket;
 
 
 void NetworkInitialize();  // 네트워크 초기화
 void NetworkFinalize();    // 네트워크 종료
 
-DWORD WINAPI RecvThread(LPVOID arg); // 데이터 수신 스레드
-void ProcessPacket(char* buf);		 // 패킷 처리 함수
+//DWORD WINAPI RecvThread(LPVOID arg); // 데이터 수신 스레드 -> GameScene에서 구현
+//void ProcessPacket(char* buf);		 // 패킷 처리 함수 -> GameScene에서 구현
 void SendData(void* buf, int size);			 // 데이터 전송 함수
 int RecvData(char buf[]);
 PACKET_HEADER* RecvPacket();
