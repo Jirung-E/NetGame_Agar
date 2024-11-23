@@ -3,8 +3,10 @@
 #include <vector>
 
 #define CS_ACTION 1
-#define SC_WORLD 2
-#define SC_INIT 3
+#define CS_EXIT 2
+
+#define SC_WORLD 1
+#define SC_INIT 2
 
 #pragma pack(push, 1)
 
@@ -27,6 +29,9 @@ struct CS_ACTION_PACKET {
 	double my;   // [-1.0f ~ 1.0f]
 };
 
+struct CS_EXIT_PACKET {
+	PACKET_HEADER header;  // CS_EXIT
+};
 
 struct SC_OBJECT {
 	// 타입은 필요 없다.
