@@ -61,6 +61,7 @@ void GameScene::connect() {
 }
 
 void GameScene::disconnect() {
+    SendExitPacket();
     connected = false;
 }
 
@@ -86,6 +87,17 @@ void GameScene::SendActionPacket() {
 	press_split = false;
 	press_spit = false;
 }
+
+void GameScene::SendExitPacket()
+{
+    CS_EXIT_PACKET packet;
+    ZeroMemory(&packet, sizeof(packet));
+    packet.header.type = CS_EXIT;
+    packet.header.size = sizeof(packet);
+
+    SendData(&packet, sizeof(CS_EXIT_PACKET));
+}
+
 
 void GameScene::RecvPacket() {
     int retval;
