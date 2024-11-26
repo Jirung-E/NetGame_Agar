@@ -120,15 +120,23 @@ void ProcessPacket(int id, char* buf) {
     char packetType = buf[0];
 
     switch (packetType) {
-    case CS_ACTION: {
-        CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
-        //cout << p->mx << ", " << p->my << endl;
+        case CS_ACTION: {
+            CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
+            //cout << p->mx << ", " << p->my << endl;
 
-        //player data update
-        world.setPlayerDestination(id, Point{ p->mx, p->my });
+            //player data update
+            world.setPlayerDestination(id, Point{ p->mx, p->my });
+            switch(p->flags) {
+                case 0b01:
+                    world.splitPlayer(id);
+                    break;
+                case 0b10:
+                    world.spitPlayer(id);
+                    break;
+            }
 
-        break;
-    }
+            break;
+        }
     }
 }
 void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {

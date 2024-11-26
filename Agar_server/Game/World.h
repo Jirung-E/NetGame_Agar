@@ -37,6 +37,8 @@ public:
     void addPlayer(uint8_t id);
     void removePlayer(uint8_t id);
     const std::unordered_map<uint8_t, Player>& getPlayers() const;
+    void splitPlayer(uint8_t id);
+    void spitPlayer(uint8_t id);
     void setPlayerDestination(uint8_t id, const Point& dest);
 
     const std::list<Trap*>& getTraps() const;

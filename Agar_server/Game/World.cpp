@@ -57,6 +57,35 @@ const std::unordered_map<uint8_t, Player>& World::getPlayers() const {
     return players;
 }
 
+
+void World::splitPlayer(uint8_t id) {
+    auto it = players.find(id);
+    if(it != players.end()) {
+        it->second.split();
+    }
+}
+
+void World::spitPlayer(uint8_t id) {
+    auto it = players.find(id);
+    if(it == players.end()) {
+        return;
+    }
+
+    auto& player = it->second;
+    for(auto e : player.cells) {
+        Cell* c = e->spit();
+        if(c != nullptr) {
+            Feed* f = new Feed { c->position, c->getRadius() };
+            f->color = c->color;
+            f->position = c->position;
+            f->velocity = c->velocity;
+            feeds.push_back(f);
+            delete c;
+        }
+    }
+}
+
+
 void World::setPlayerDestination(uint8_t id, const Point& dest) {
     auto it = players.find(id);
     if(it != players.end()) {

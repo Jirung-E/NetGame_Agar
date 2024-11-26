@@ -133,34 +133,3 @@ PACKET_HEADER* RecvPacket() {
         }
 	}
 }
-
-
-
-DWORD __stdcall RecvThread(LPVOID arg)
-{
-	int retval;
-
-	// 데이터 통신에 사용할 변수
-	char buf[BUFSIZE];
-	size_t len;
-
-	while (1)
-	{
-		// 데이터 수신
-		retval = recv(clientsocket, buf, BUFSIZE, MSG_WAITALL);
-		if (retval == SOCKET_ERROR) err_quit("recv()");
-		else if (retval == 0) break;
-
-		// 데이터 처리
-		ProcessPacket(buf);
-	}
-
-	return 0;
-}
-
-void ProcessPacket(char* buf)
-{
-	// 패킷 분석
-	
-	// 패킷 처리
-}
