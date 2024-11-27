@@ -135,8 +135,16 @@ void ProcessPacket(int id, char* buf) {
 
             break;
         }
+
+        case CS_EXIT: {
+            // closesocket -> ProcessClient에서 처리
+            // world에서 제거 -> ProcessClient에서 처리
+
+            break;
+        }
     }
 }
+
 void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
     char buf[PACKETSIZEMAX];
