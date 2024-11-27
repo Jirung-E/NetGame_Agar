@@ -126,13 +126,11 @@ void ProcessPacket(int id, char* buf) {
 
             //player data update
             world.setPlayerDestination(id, Point{ p->mx, p->my });
-            switch(p->flags) {
-                case 0b01:
-                    world.splitPlayer(id);
-                    break;
-                case 0b10:
-                    world.spitPlayer(id);
-                    break;
+            if(p->flags & 0b01) {
+                world.splitPlayer(id);
+            }
+            if(p->flags & 0b10) {
+                world.spitPlayer(id);
             }
 
             break;
