@@ -76,7 +76,7 @@ void World::spitPlayer(uint8_t id) {
         Cell* c = e->spit();
         if(c != nullptr) {
             Feed* f = new Feed { c->position, c->getRadius() };
-            f->color = c->color;
+            f->color = player.color;
             f->position = c->position;
             f->velocity = c->velocity;
             feeds.push_back(f);
