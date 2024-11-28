@@ -3,6 +3,8 @@
 #include <chrono>
 #include <atomic>
 #include <mutex>
+#include <queue>
+#include <condition_variable>
 
 #include "Common.h"
 #include "Game/World.h"
@@ -12,11 +14,11 @@
 using namespace std;
 using namespace chrono;
 
-
+// 상수 및 전역 변수 정의
 const int SERVERPORT = 9000;
 const int PACKETSIZEMAX = 512;
-
 const int MAX_CLIENTS = 8;
+
 mutex socket_mutex;
 SOCKET sockets[MAX_CLIENTS];
 
@@ -25,55 +27,57 @@ const uint8_t FEED_ID = 200;
 
 World world;
 
+// 작업 큐 정의
+struct Packet {
+    int id;
+    vector<char> data;
+};
 
+queue<Packet> packet_queue;
+mutex queue_mutex;
+condition_variable queue_condition;
+
+// 패킷을 전송하는 함수
 void send_packet(SOCKET socket, const char* buf, int size) {
-    // 각 소켓에 데이터 전송
-    for(auto& sock : sockets) {
-        if(sock == INVALID_SOCKET) {
+    for (auto& sock : sockets) {
+        if (sock == INVALID_SOCKET) {
             continue;
         }
 
-        // 데이터 전송(send()
         int retval = send(sock, buf, size, 0);
-        if(retval == SOCKET_ERROR) {
+        if (retval == SOCKET_ERROR) {
             err_display("[server] send()");
         }
-
-        //cout << "send: " << retval << endl;
     }
 }
 
-
+// 게임 로직 처리
 void run_game(World& world) {
     auto timer = clock();
     auto elapsed = 0;
     int update_time = fps(30);
 
-    // 고정프레임 업데이트
-    while(true) {
+    while (true) {
         elapsed += clock() - timer;
         timer = clock();
-        if(elapsed < update_time) {
+        if (elapsed < update_time) {
             continue;
         }
 
         elapsed -= update_time;
-
         world.update(update_time);
 
         auto players = world.getPlayers();
         auto traps = world.getTraps();
         auto feeds = world.getFeeds();
 
-        // World 정보 전송
         SC_WORLD_PACKET packet;
         packet.type = SC_WORLD;
         packet.object_num = 0;
 
-        for(const auto& p : players) {
+        for (const auto& p : players) {
             auto player = p.second;
-
-            for(const auto& cell : player.cells) {
+            for (const auto& cell : player.cells) {
                 SC_OBJECT obj;
                 obj.id = player.id;
                 obj.x = cell->position.x;
@@ -86,7 +90,7 @@ void run_game(World& world) {
             }
         }
 
-        for(const auto& cell : feeds) {
+        for (const auto& cell : feeds) {
             SC_OBJECT obj;
             obj.id = FEED_ID;
             obj.x = cell->position.x;
@@ -98,7 +102,7 @@ void run_game(World& world) {
             packet.object_num++;
         }
 
-        for(const auto& cell : traps) {
+        for (const auto& cell : traps) {
             SC_OBJECT obj;
             obj.id = TRAP_ID;
             obj.x = cell->position.x;
@@ -110,46 +114,55 @@ void run_game(World& world) {
             packet.object_num++;
         }
 
-        packet.size = sizeof(PACKET_HEADER) + sizeof(int) + sizeof(SC_OBJECT)*packet.object_num;
-
+        packet.size = sizeof(PACKET_HEADER) + sizeof(int) + sizeof(SC_OBJECT) * packet.object_num;
         send_packet(INVALID_SOCKET, packet.serialize().data(), packet.size);
     }
 }
+
 
 void ProcessPacket(int id, char* buf) {
     char packetType = buf[0];
 
     switch (packetType) {
-        case CS_ACTION: {
-            CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
-            //cout << p->mx << ", " << p->my << endl;
+    case CS_ACTION: {
+        CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
 
-            //player data update
-            world.setPlayerDestination(id, Point{ p->mx, p->my });
-            if(p->flags & 0b01) {
-                world.splitPlayer(id);
-            }
-            if(p->flags & 0b10) {
-                world.spitPlayer(id);
-            }
-
-            break;
+        world.setPlayerDestination(id, Point{ p->mx, p->my });
+        if (p->flags & 0b01) {
+            world.splitPlayer(id);
         }
-
-        case CS_EXIT: {
-            // closesocket -> ProcessClient에서 처리
-            // world에서 제거 -> ProcessClient에서 처리
-
-            break;
+        if (p->flags & 0b10) {
+            world.spitPlayer(id);
         }
+        break;
+    }
+    case CS_EXIT: {
+        // closesocket -> ProcessClient에서 처리
+        // world에서 제거 -> ProcessClient에서 처리
+        break;
+    }
     }
 }
 
+// 패킷 처리 스레드
+void process_packet_thread() {
+    while (true) {
+        unique_lock<mutex> lock(queue_mutex);
+        queue_condition.wait(lock, [] { return !packet_queue.empty(); });
+
+        Packet packet = packet_queue.front();
+        packet_queue.pop();
+        lock.unlock();
+
+        // 패킷 처리
+        ProcessPacket(packet.id, packet.data.data());
+    }
+}
+// 클라이언트 패킷 처리
 void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
     char buf[PACKETSIZEMAX];
 
-    // 접속한 클라이언트 정보 출력
     char addr[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
     printf("%s:%d\n", addr, ntohs(clientaddr.sin_port));
@@ -159,56 +172,37 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     init_packet.size = sizeof(SC_INIT_PACKET);
     init_packet.id = id;
     retval = send(socket, (const char*)&init_packet, init_packet.size, 0);
-    switch(retval) {
-        case SOCKET_ERROR:
-            err_display("[server] send()");
-            break;
-        case 0:
-            err_display("[server] send()");
-            break;
-        default:
-            break;
+
+    if (retval == SOCKET_ERROR) {
+        err_display("[server] send()");
     }
 
-    // World에 플레이어 추가
     world.addPlayer(id);
-    cout << "Players: \n";
-    for(const auto& p : world.getPlayers()) {
-        printf(" - id: %2d\n", p.first);
-    }
 
-    // 클라이언트와 데이터 통신
-    while(true) {
-        // 클라이언트 정보 수신
+    while (true) {
         retval = recv(socket, buf, PACKETSIZEMAX, 0);
-        if(retval == SOCKET_ERROR) {
-            err_display("[server] recv()");
-            break;
-        }
-        else if(retval == 0) {		// 연결 종료
+        if (retval == SOCKET_ERROR || retval == 0) {
             break;
         }
 
-        ProcessPacket(id, buf);
+        // 패킷 큐에 추가
+        {
+            lock_guard<mutex> lock(queue_mutex);
+            packet_queue.push({id, vector<char>(buf, buf + retval)});
+        }
+        queue_condition.notify_one();
     }
 
-    // World에서 플레이어 삭제
     world.removePlayer(id);
-    cout << "Players: \n";
-    for(const auto& p : world.getPlayers()) {
-        printf(" - id: %2d\n", p.first);
-    }
-
-    // 통신 소켓 닫기
     closesocket(socket);
 
-    socket_mutex.lock();
+    lock_guard<mutex> lock(socket_mutex);
     sockets[id] = INVALID_SOCKET;
-    socket_mutex.unlock();
 }
 
+// 네트워크 초기화
 int NetworkInitialize() {
-    for(auto& sock : sockets) {
+    for (auto& sock : sockets) {
         sock = INVALID_SOCKET;
     }
 
@@ -223,73 +217,63 @@ int NetworkInitialize() {
         err_quit("socket()");
     }
 
-    // bind()
-    int retval;
-
     struct sockaddr_in serveraddr;
     memset(&serveraddr, 0, sizeof(serveraddr));
     serveraddr.sin_family = AF_INET;
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serveraddr.sin_port = htons(SERVERPORT);
-    retval = bind(listen_sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-    if (retval == SOCKET_ERROR) {
+    if (bind(listen_sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr)) == SOCKET_ERROR) {
         err_quit("bind()");
     }
 
-    // listen()
-    retval = listen(listen_sock, SOMAXCONN);
-    if (retval == SOCKET_ERROR) {
+    if (listen(listen_sock, SOMAXCONN) == SOCKET_ERROR) {
         err_quit("listen()");
     }
 
-    // 데이터 통신에 사용할 소캣
     SOCKET client_sock;
     struct sockaddr_in clientaddr;
     int addrlen;
 
     while (true) {
-        // accept()
         addrlen = sizeof(clientaddr);
         client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
         if (client_sock == INVALID_SOCKET) {
             err_display("accept()");
-            break;
+            continue;
         }
 
-        // 슬롯이 빌때까지 대기
-        bool wait = true;
+        bool slot_found = false;
 
-        while(wait) {
-            socket_mutex.lock();
-            for(int i=0; i<MAX_CLIENTS; ++i) {
-                if(sockets[i] == INVALID_SOCKET) {
-                    sockets[i] = client_sock;
-                    std::thread new_client_thread { ProcessClient, client_sock, clientaddr, i };
-                    new_client_thread.detach();
-
-                    wait = false;
-                    break;
-                }
+        lock_guard<mutex> lock(socket_mutex);
+        for (int i = 0; i < MAX_CLIENTS; ++i) {
+            if (sockets[i] == INVALID_SOCKET) {
+                sockets[i] = client_sock;
+                thread(ProcessClient, client_sock, clientaddr, i).detach();
+                slot_found = true;
+                break;
             }
-            socket_mutex.unlock();
+        }
+
+        if (!slot_found) {
+            closesocket(client_sock);
         }
     }
 
-    // 대기 소켓 닫기
     closesocket(listen_sock);
-
     WSACleanup();
+    return 0;
 }
 
+// 메인 함수
 int main() {
-    // ------------------------------------- 게임 실행 -------------------------------------
-    //World world;
     world.setUp();
 
-    thread game_logic { [&]() { run_game(world); } };
+    thread game_logic(run_game, ref(world));
+    thread packet_processor(process_packet_thread);
+
     game_logic.detach();
+    packet_processor.detach();
 
-
-    // ------------------------------------- 네트워크 작업 -------------------------------------
     NetworkInitialize();
+    return 0;
 }

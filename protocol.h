@@ -58,7 +58,7 @@ public:
 		return buffer;
 	}
 };
-
+/*
 struct LOGIN_PACKET {
 	uint8_t id;
 	Player playerinfo;
@@ -66,5 +66,5 @@ struct LOGIN_PACKET {
 	//기본형? 미리 만들어둠 수정필요.
 
 };
-
+*/
 #pragma pack(pop)
