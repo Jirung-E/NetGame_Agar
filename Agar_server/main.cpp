@@ -188,7 +188,7 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
         // 패킷 큐에 추가
         {
             lock_guard<mutex> lock(queue_mutex);
-            packet_queue.push({id, vector<char>(buf, buf + retval)});
+            packet_queue.push({ id, vector<char>(buf, buf + retval) });
         }
         queue_condition.notify_one();
     }
