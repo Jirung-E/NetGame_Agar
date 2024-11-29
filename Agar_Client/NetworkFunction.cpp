@@ -11,7 +11,7 @@
 
 #include "../protocol.h"
 
-char* SERVERIP = (char*)"127.0.0.1";
+char* SERVERIP = (char*)"192.168.21.9";
 
 WSADATA wsadata;
 SOCKET clientsocket;

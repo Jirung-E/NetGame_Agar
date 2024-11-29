@@ -190,12 +190,14 @@ void GameScene::ProcessPacket(PACKET_HEADER* packet) {
             this->objects.clear();
             player.clearCells();
 
+            game_over = true;
             for(const auto& obj : p->objects) {
                 Cell cell { Point { obj.x, obj.y }, obj.radius };
                 cell.color = obj.color;
                 this->objects.push_back(cell);
                 if(obj.id == id) {
                     player.addCell(&this->objects.back());
+                    game_over = false;
                 }
             }
 
