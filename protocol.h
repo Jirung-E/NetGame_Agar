@@ -34,6 +34,10 @@ struct CS_EXIT_PACKET {
 	PACKET_HEADER header;  // CS_EXIT
 };
 
+struct CS_RESPAWN_PACKET {
+	PACKET_HEADER header;  // CS_RESPAWN
+};
+
 struct SC_OBJECT {
 	// 타입은 필요 없다.
 	uint8_t id;
