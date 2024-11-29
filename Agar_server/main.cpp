@@ -136,6 +136,9 @@ void ProcessPacket(int id, char* buf) {
         }
         break;
     }
+    case CS_RESPAWN: {
+        //리스폰처리
+    }
     case CS_EXIT: {
         // closesocket -> ProcessClient에서 처리
         // world에서 제거 -> ProcessClient에서 처리
@@ -144,12 +147,12 @@ void ProcessPacket(int id, char* buf) {
     }
 }
 
-// 패킷 처리 스레드
+// 패킷 처리 전용 스레드
 void process_packet_thread() {
     while (true) {
         unique_lock<mutex> lock(queue_mutex);
-        queue_condition.wait(lock, [] { return !packet_queue.empty(); });//queue가 비어있을 시: 스레드는 대기(sleep상태) // queue가 비어있지 않을 시: wake
-
+        queue_condition.wait(lock, [] { return !packet_queue.empty(); });//queue가 비어있을 시: 스레드는 대기(sleep상태) // queue가 비어있지 않을 시: wake >> wait 중 lock 상태 유지 X
+         
         Packet packet = packet_queue.front();
         packet_queue.pop();
         lock.unlock();
@@ -190,7 +193,7 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             lock_guard<mutex> lock(queue_mutex);
             packet_queue.push({ id, vector<char>(buf, buf + retval) });
         }
-        queue_condition.notify_one();
+        queue_condition.notify_one();//스레드 깨우기
     }
 
     world.removePlayer(id);
