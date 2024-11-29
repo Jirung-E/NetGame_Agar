@@ -4,6 +4,7 @@
 
 #define CS_ACTION 1
 #define CS_EXIT 2
+#define CS_RESTART 3
 
 #define SC_WORLD 1
 #define SC_INIT 2
@@ -31,6 +32,10 @@ struct CS_ACTION_PACKET {
 
 struct CS_EXIT_PACKET {
 	PACKET_HEADER header;  // CS_EXIT
+};
+
+struct CS_RESTART_PACKET {
+	PACKET_HEADER header;  // CS_RESTART
 };
 
 struct SC_OBJECT {
