@@ -3,7 +3,6 @@
 
 World::World():
     map { },
-    feed_erase_count { 0 },
     trap_gen_interval { 4000 },
     trap_gen_timer { 0 },
     feed_gen_interval { 2000 },
@@ -14,10 +13,8 @@ World::World():
 
 
 void World::setUp() {
-    randomGenFeed();
-    randomGenFeed();
-    //randomGenEnemy();
     for(int i=0; i<5; i++) {
+        randomGenFeed();
         randomGenTrap();
     }
 }
@@ -470,15 +467,8 @@ void World::trapCollisionCheck() {
 
 
 void World::randomGenFeed() {
-    feed_erase_count++;
-    if(feeds.size() > 200 || feed_erase_count >= 7) {
-        feed_erase_count = 0;
-        // 오래된거(앞에 10개) 제거
-        for(int i=0; i<10; ++i) {
-            if(feeds.size() > 0) {
-                feeds.pop_front();
-            }
-        }
+    if(feeds.size() > 500) {
+        return;
     }
 
     for(int i=0; i<20; ++i) {

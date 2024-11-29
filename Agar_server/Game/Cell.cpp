@@ -5,7 +5,7 @@
 
 
 const double Cell::min_radius = 0.3;
-const double Cell::max_radius = 5;
+const double Cell::max_radius = 8;
 
 Cell::Cell(const Point& position, const double radius) : Object { position }, radius { radius }, color { White }, 
 target_radius { radius }, prev_radius { radius }, trans_count { 0 }, accel_count { 0 }, invincible { false } {

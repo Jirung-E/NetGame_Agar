@@ -20,8 +20,6 @@ private:
     std::list<Trap*> traps;
     std::list<Feed*> feeds;
 
-    int feed_erase_count;
-
     const int trap_gen_interval;
     int trap_gen_timer;
     const int feed_gen_interval;
