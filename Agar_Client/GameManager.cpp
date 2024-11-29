@@ -27,19 +27,11 @@ void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 		case VK_ESCAPE:
 			quit(hWnd);
 			break;
-		case L'n': case L'N':
-			if(current_scene->getID() == Main) {
-				gameStart(hWnd);
-			}
-			break;
 		}
 		break;
 	case Game:
 		switch(keycode) {
-		case VK_ESCAPE: case L'q': case L'Q':
-			quit(hWnd);
-			break;
-		case L's': case L'S':
+		case VK_ESCAPE:
 			game_scene.togglePauseState();
 			releaseCursor();
 			break;
@@ -51,9 +43,6 @@ void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 			break;
 		case L'p': case L'P':
 			game_scene.show_score = !game_scene.show_score;
-			break;
-		case L'r': case L'R':
-			gameStart(hWnd);
 			break;
 		}
 		break;
@@ -110,8 +99,6 @@ void GameManager::quit(const HWND& hWnd) {
 	case Game:
 		current_scene = &main_scene;
 		game_scene.disconnect();
-		KillTimer(hWnd, GenerateFeeds);
-		KillTimer(hWnd, GenerateEnemy);
 		releaseCursor();
 		break;
 	case Main:

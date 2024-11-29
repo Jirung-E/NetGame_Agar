@@ -14,17 +14,11 @@ GameScene::GameScene():
     Scene { Game }, 
     map { },
     id { 0 },
-    paused { false }, 
     cam_mode { Fixed }, 
-    show_score { false },
     resume_button { L"Resume", { 20, 30 }, 60, 15 }, 
     quit_button { L"Quit", { 20, 60 }, 60, 15 }, 
     game_over_message { L"Game Over", { 0, 10 }, 100, 20 }, 
-    restart_button { L"Restart", { 20, 40 }, 60, 15 },
-    game_over { false }, 
-    play_time { 0 }, 
-    start_time { clock() }, 
-    end_time { clock() } 
+    restart_button { L"Restart", { 20, 40 }, 60, 15 }
     //sock { NULL } 
 {
     resume_button.border_color = Gray;
@@ -39,6 +33,8 @@ GameScene::GameScene():
     restart_button.border_color = Gray;
     restart_button.border_width = 3;
     restart_button.id = RestartGame;
+
+    setUp();
 }
 
 
@@ -47,7 +43,7 @@ void GameScene::setUp() {
 
     paused = false;
     game_over = false;
-    show_score = false;
+    show_score = true;
     play_time = 0;
     start_time = clock();
     end_time = clock();
@@ -131,51 +127,9 @@ void GameScene::RecvPacket() {
         }
 
         this->ProcessPacket(packet);
-
-        delete packet;
     }
 
     NetworkFinalize();
-}
-
-void GameScene::ProcessPacket(char* buf) {
-    // 패킷 분석
-    
-    // 패킷 처리
-
-    char type = buf[0];
-    switch(type) {
-        case SC_INIT: {
-            SC_INIT_PACKET* packet = (SC_INIT_PACKET*)buf;
-            id = packet->id;
-            break;
-        }
-        case SC_WORLD: {
-            SC_WORLD_PACKET* packet = (SC_WORLD_PACKET*)buf;
-            SC_OBJECT* objects = (SC_OBJECT*)(buf + sizeof(SC_WORLD_PACKET));
-
-            objects_mutex.lock();
-
-            this->objects.clear();
-            player.clearCells();
-
-            for(int i=0; i<packet->object_num; ++i) {
-                SC_OBJECT& obj = objects[i];
-                Cell cell { Point { obj.x, obj.y }, obj.radius };
-                cell.color = obj.color;
-                this->objects.push_back(cell);
-                if(obj.id == id) {
-                    player.addCell(&this->objects.back());
-                }
-                //this->objects.insert_or_assign(obj.id, cell);
-            }
-
-            objects_mutex.unlock();
-
-            //Beep(1000, 100);
-            break;
-        }
-    }
 }
 
 void GameScene::ProcessPacket(PACKET_HEADER* packet) {
@@ -183,6 +137,7 @@ void GameScene::ProcessPacket(PACKET_HEADER* packet) {
         case SC_INIT: {
             SC_INIT_PACKET* p = (SC_INIT_PACKET*)packet;
             id = p->id;
+            delete p;
             break;
         }
         case SC_WORLD: {
@@ -194,6 +149,8 @@ void GameScene::ProcessPacket(PACKET_HEADER* packet) {
             player.clearCells();
 
             game_over = true;
+            CameraMode prev_cam_mode = cam_mode;
+            cam_mode = Fixed;
             for(const auto& obj : p->objects) {
                 Cell cell { Point { obj.x, obj.y }, obj.radius };
                 cell.color = obj.color;
@@ -201,10 +158,13 @@ void GameScene::ProcessPacket(PACKET_HEADER* packet) {
                 if(obj.id == id) {
                     player.addCell(&this->objects.back());
                     game_over = false;
+                    cam_mode = prev_cam_mode;
                 }
             }
 
             objects_mutex.unlock();
+
+            delete p;
 
             //Beep(1000, 100);
             break;
@@ -215,14 +175,13 @@ void GameScene::ProcessPacket(PACKET_HEADER* packet) {
 
 
 void GameScene::update(const POINT& point) {
-    if(paused) {
-        return;
-    }
     if(!game_over) {
         end_time = clock();
         play_time += end_time - start_time;
         start_time = clock();
-        updatePlayer(point);
+        if(!paused) {
+            updatePlayer(point);
+        }
     }
 }
 
@@ -244,8 +203,8 @@ void GameScene::pause() {
 void GameScene::resume() {
     if(!game_over) {
         paused = false;
-        end_time = clock();
-        start_time = clock();
+        //end_time = clock();
+        //start_time = clock();
     }
 }
 
@@ -344,11 +303,11 @@ void GameScene::draw(const HDC& hdc) const {
         drawScore(hdc);
     }
 
-    if(paused) {
-        drawPauseScene(hdc);
-    }
-    else if(game_over) {
+    if(game_over) {
         drawGameOverScene(hdc);
+    }
+    else if(paused) {
+        drawPauseScene(hdc);
     }
 }
 
@@ -397,13 +356,15 @@ void GameScene::drawScore(const HDC& hdc) const {
     std::basic_stringstream<TCHAR> ss;
 
     // 크기 출력
-    //ss << L"Size: " << player.getSize() * 10;
-    //text = ss.str();
-    //score.text = ss.str();
-    //score.show(hdc, valid_area);
-    //ss.str(L"");
+    objects_mutex.lock();
+    ss << L"Size: " << player.getSize() * 10;
+    objects_mutex.unlock();
+    text = ss.str();
+    score.text = ss.str();
+    score.show(hdc, valid_area);
+    ss.str(L"");
 
-    // 플레이 시간 출력
+    // 플레이 시간 출력(시간은 클라이언트에서 측정)
     ss << L"PlayTime: " << play_time/1000 << "\"";
     text = ss.str();
     score.text = ss.str();
@@ -430,7 +391,7 @@ void GameScene::drawGameOverScene(const HDC& hdc) const {
     tstring text;
     std::basic_stringstream<TCHAR> ss;
 
-    // 플레이 시간 출력
+    // 플레이 시간 출력(시간은 클라이언트에서 측정)
     ss << L"PlayTime: " << play_time/1000 << "\"";
     text = ss.str();
     score.text = ss.str();
@@ -440,7 +401,7 @@ void GameScene::drawGameOverScene(const HDC& hdc) const {
 
 
 void GameScene::setCameraMode(const CameraMode& mode) {
-    if(paused) {
+    if(paused || game_over) {
         return;
     }
     cam_mode = mode;
@@ -448,17 +409,6 @@ void GameScene::setCameraMode(const CameraMode& mode) {
 
 
 ButtonID GameScene::clickL(const POINT& point) {
-    if(paused) {
-        RECT r = resume_button.absoluteArea(valid_area);
-        if(PtInRect(&r, point)) {
-            return resume_button.id;
-        }
-        r = quit_button.absoluteArea(valid_area);
-        if(PtInRect(&r, point)) {
-            return quit_button.id;
-        }
-        return None;
-    }
     if(game_over) {
         RECT r = quit_button.absoluteArea(valid_area);
         if(PtInRect(&r, point)) {
@@ -470,6 +420,17 @@ ButtonID GameScene::clickL(const POINT& point) {
         }
         return None;
     }
+    else if(paused) {
+        RECT r = resume_button.absoluteArea(valid_area);
+        if(PtInRect(&r, point)) {
+            return resume_button.id;
+        }
+        r = quit_button.absoluteArea(valid_area);
+        if(PtInRect(&r, point)) {
+            return quit_button.id;
+        }
+        return None;
+    }
 
     press_split = true;
     //player.split();
@@ -478,10 +439,10 @@ ButtonID GameScene::clickL(const POINT& point) {
 }
 
 ButtonID GameScene::clickR(const POINT& point) {
-    if(paused) {
+    if(game_over) {
         return None;
     }
-    if(game_over) {
+    else if(paused) {
         return None;
     }
 
