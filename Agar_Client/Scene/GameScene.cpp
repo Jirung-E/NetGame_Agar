@@ -15,6 +15,7 @@ GameScene::GameScene():
     map { },
     id { 0 },
     cam_mode { Fixed }, 
+    show_score { true },
     resume_button { L"Resume", { 20, 30 }, 60, 15 }, 
     quit_button { L"Quit", { 20, 60 }, 60, 15 }, 
     game_over_message { L"Game Over", { 0, 10 }, 100, 20 }, 
@@ -39,14 +40,20 @@ GameScene::GameScene():
 
 
 void GameScene::setUp() {
+    objects_mutex.lock();
+    player.clearCells();
     objects.clear();
+    objects_mutex.unlock();
 
+    cam_mode = Dynamic;
     paused = false;
     game_over = false;
-    show_score = true;
     play_time = 0;
     start_time = clock();
     end_time = clock();
+
+    press_spit = false;
+    press_split = false;
 }
 
 
@@ -209,7 +216,14 @@ void GameScene::resume() {
 }
 
 void GameScene::restart() {
-    // TODO: send restart packet
+    // send restart packet
+    CS_RESPAWN_PACKET packet;
+    ZeroMemory(&packet, sizeof(packet));
+    packet.header.type = CS_RESPAWN;
+    packet.header.size = sizeof(packet);
+
+    SendData(&packet, sizeof(CS_RESPAWN_PACKET));
+    
     setUp();
 }
 
@@ -316,7 +330,7 @@ RECT GameScene::getViewArea() const {
     case Fixed:
         return valid_area;
     case Dynamic:
-        {
+        if(player.getCells().size() > 0) {
             // 보이는 영역의 크기 설정
             double r0 = Cell::min_radius;
             //double rm = Cell::max_radius;
@@ -339,11 +353,18 @@ RECT GameScene::getViewArea() const {
                 LONG(floor(valid_area.bottom - py + A))
             };
         }
+        else {
+            return valid_area;
+        }
     }
     return valid_area;
 }
 
 void GameScene::drawScore(const HDC& hdc) const {
+    if(player.getCells().size() == 0) {
+        return;
+    }
+
     TextBox score { L"", { 0, 0 }, 50, 5 };
     score.transparent_background = true;
     score.transparent_border = true;

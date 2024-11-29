@@ -22,7 +22,7 @@ private:
     Map map;
 
     uint8_t id;
-    std::list<Cell> objects;
+    std::vector<Cell> objects;
     Player player;
     Point player_destination;
     mutable std::mutex objects_mutex;
