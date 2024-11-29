@@ -148,7 +148,7 @@ void ProcessPacket(int id, char* buf) {
 void process_packet_thread() {
     while (true) {
         unique_lock<mutex> lock(queue_mutex);
-        queue_condition.wait(lock, [] { return !packet_queue.empty(); });
+        queue_condition.wait(lock, [] { return !packet_queue.empty(); });//queue가 비어있을 시: 스레드는 대기(sleep상태) // queue가 비어있지 않을 시: wake
 
         Packet packet = packet_queue.front();
         packet_queue.pop();
