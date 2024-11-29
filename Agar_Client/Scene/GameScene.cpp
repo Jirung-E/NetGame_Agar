@@ -19,7 +19,8 @@ GameScene::GameScene():
     show_score { false },
     resume_button { L"Resume", { 20, 30 }, 60, 15 }, 
     quit_button { L"Quit", { 20, 60 }, 60, 15 }, 
-    game_over_message { L"Game Over", { 10, 30 }, 80, 15 }, 
+    game_over_message { L"Game Over", { 0, 10 }, 100, 20 }, 
+    restart_button { L"Restart", { 20, 40 }, 60, 15 },
     game_over { false }, 
     play_time { 0 }, 
     start_time { clock() }, 
@@ -35,7 +36,9 @@ GameScene::GameScene():
     game_over_message.text_color = Red;
     game_over_message.background_color = LightGray;
     game_over_message.bold = 4;
-
+    restart_button.border_color = Gray;
+    restart_button.border_width = 3;
+    restart_button.id = RestartGame;
 }
 
 
@@ -246,6 +249,11 @@ void GameScene::resume() {
     }
 }
 
+void GameScene::restart() {
+    // TODO: send restart packet
+    setUp();
+}
+
 
 void GameScene::updatePlayer(const POINT& point) {
     RECT map_area { 0.0, 0.0, 0.0, 0.0 };
@@ -412,8 +420,9 @@ void GameScene::drawPauseScene(const HDC& hdc) const {
 void GameScene::drawGameOverScene(const HDC& hdc) const {
     game_over_message.show(hdc, valid_area);
     quit_button.show(hdc, valid_area);
+    restart_button.show(hdc, valid_area);
 
-    TextBox score { L"", { 0, 45 }, 100, 7 };
+    TextBox score { L"", { 0, 30 }, 100, 7 };
     score.transparent_background = true;
     score.transparent_border = true;
     score.bold = 4;
@@ -454,6 +463,10 @@ ButtonID GameScene::clickL(const POINT& point) {
         RECT r = quit_button.absoluteArea(valid_area);
         if(PtInRect(&r, point)) {
             return quit_button.id;
+        }
+        r = restart_button.absoluteArea(valid_area);
+        if(PtInRect(&r, point)) {
+            return restart_button.id;
         }
         return None;
     }

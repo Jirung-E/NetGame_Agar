@@ -76,6 +76,9 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Directi
 			game_scene.resume();
 			lockCursor(hWnd);
 			break;
+		case RestartGame:
+			gameReStart(hWnd);
+			break;
 		case QuitGame:
 			quit(hWnd);
 			break;
@@ -153,6 +156,12 @@ void GameManager::gameStart(const HWND& hWnd) {
 	game_scene.setUp();
 	game_scene.connect();
     current_scene = &game_scene;
+}
+
+void GameManager::gameReStart(const HWND& hWnd) {
+	fixCursor(hWnd);
+
+	game_scene.restart();
 }
 
 void GameManager::lockCursor(const HWND& hWnd) {

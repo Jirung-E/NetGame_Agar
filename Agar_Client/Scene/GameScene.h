@@ -31,6 +31,7 @@ private:
     Button quit_button;
     bool paused;
     TextBox game_over_message;
+    Button restart_button;
     bool game_over;
 
     CameraMode cam_mode;
@@ -67,6 +68,7 @@ public:
     void togglePauseState();
     void pause();
     void resume();
+    void restart();
 
 private:
     void updatePlayer(const POINT& point);
