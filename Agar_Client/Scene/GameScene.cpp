@@ -104,6 +104,16 @@ void GameScene::SendExitPacket()
     SendData(&packet, sizeof(CS_EXIT_PACKET));
 }
 
+void GameScene::SendRespawnPacket()
+{
+	CS_RESPAWN_PACKET packet;
+	ZeroMemory(&packet, sizeof(packet));
+	packet.header.type = CS_RESPAWN;
+	packet.header.size = sizeof(packet);
+
+	SendData(&packet, sizeof(CS_RESPAWN_PACKET));
+}
+
 
 void GameScene::RecvPacket() {
     int retval;
@@ -217,13 +227,8 @@ void GameScene::resume() {
 
 void GameScene::restart() {
     // send restart packet
-    CS_RESPAWN_PACKET packet;
-    ZeroMemory(&packet, sizeof(packet));
-    packet.header.type = CS_RESPAWN;
-    packet.header.size = sizeof(packet);
+	SendRespawnPacket();
 
-    SendData(&packet, sizeof(CS_RESPAWN_PACKET));
-    
     setUp();
 }
 

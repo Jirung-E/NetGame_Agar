@@ -59,6 +59,7 @@ public:
     CS_ACTION_PACKET BuildActionPacket();
 	void SendActionPacket();
 	void SendExitPacket();
+	void SendRespawnPacket();
     void RecvPacket();
     void ProcessPacket(PACKET_HEADER* packet);
 
