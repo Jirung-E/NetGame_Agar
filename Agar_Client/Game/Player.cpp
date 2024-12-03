@@ -28,8 +28,9 @@ Point Player::getCenterPoint() const {
         center.x += e->position.x;
         center.y += e->position.y;
     }
-    center.x /= cells.size();
-    center.y /= cells.size();
+    int size = cells.size();
+    center.x /= size;
+    center.y /= size;
     return center;
 }
 

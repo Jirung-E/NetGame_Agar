@@ -139,6 +139,7 @@ void ProcessPacket(int id, char* buf) {
     case CS_RESPAWN: {
         //리스폰처리
         world.addPlayer(id);
+        break;
     }
     case CS_EXIT: {
         // closesocket -> ProcessClient에서 처리

@@ -34,7 +34,7 @@ private:
     Button restart_button;
     bool game_over;
 
-    CameraMode cam_mode;
+    volatile CameraMode cam_mode;
 
     double play_time;
     clock_t start_time;
@@ -42,7 +42,7 @@ private:
 
     bool press_spit;
     bool press_split;
-    Point mouse_position;
+    Point mouse_position;   // ╬х╬╡юс
 
     std::atomic_bool connected;
 

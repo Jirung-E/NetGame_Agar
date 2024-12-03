@@ -54,6 +54,8 @@ void GameScene::setUp() {
 
     press_spit = false;
     press_split = false;
+
+    player_destination = { 0, 0 };
 }
 
 
@@ -165,18 +167,20 @@ void GameScene::ProcessPacket(PACKET_HEADER* packet) {
             this->objects.clear();
             player.clearCells();
 
-            game_over = true;
-            CameraMode prev_cam_mode = cam_mode;
-            cam_mode = Fixed;
+            bool my_id = false;
             for(const auto& obj : p->objects) {
                 Cell cell { Point { obj.x, obj.y }, obj.radius };
                 cell.color = obj.color;
                 this->objects.push_back(cell);
                 if(obj.id == id) {
                     player.addCell(&this->objects.back());
-                    game_over = false;
-                    cam_mode = prev_cam_mode;
+                    my_id = true;
                 }
+            }
+
+            if(!my_id) {
+                game_over = true;
+                cam_mode = Fixed;
             }
 
             objects_mutex.unlock();
@@ -264,6 +268,9 @@ void GameScene::updatePlayer(const POINT& point) {
     }
 
     // 맵 좌표로 변환
+    if(map_area_w == 0 || map_area_h == 0) {
+        return;
+    }
     player_destination.x = ((point.x - map_area.left) / map_area_w) * map.getWidth();
     player_destination.y = ((point.y - map_area.top) / map_area_h) * map.getHeight();
 
@@ -282,7 +289,6 @@ void GameScene::draw(const HDC& hdc) const {
 
     for(auto& e : objects) {
         e.draw(hdc, map, view_area);
-        //e.second.draw(hdc, map, view_area);
     }
 
     // 플레이어 이동방향

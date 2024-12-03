@@ -104,7 +104,6 @@ void World::updatePlayers() {
     for(auto& t_player : players) {
         auto& player = t_player.second;
         for(auto& e : player.cells) {
-            Point p { e->position };
             Vector dir { player.destination - e->position };
             e->move(dir, map);  // destination에 따라 이동
             e->growUp();
