@@ -13,13 +13,6 @@ Player::Player(const uint8_t id, const Point& position):
 }
 
 
-void Player::setUp() {
-    for(auto e : cells) {
-        e->setUp();
-    }
-}
-
-
 void Player::move(const Vector& vector, const Map& map) {
     for(auto e : cells) {
         e->move(vector, map);

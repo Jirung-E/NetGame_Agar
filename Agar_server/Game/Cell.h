@@ -24,8 +24,6 @@ public:
     Cell(const Point& position, const double radius = 0.3);
 
 public:
-    void setUp();
-
     void move(const Vector& vector, const Map& map);
     void move(const Map& map);
 

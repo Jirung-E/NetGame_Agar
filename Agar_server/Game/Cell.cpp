@@ -13,16 +13,6 @@ target_radius { radius }, prev_radius { radius }, trans_count { 0 }, accel_count
 }
 
 
-void Cell::setUp() {
-    radius = min_radius;
-    target_radius = radius;
-    prev_radius = radius;
-    trans_count = 0;
-    accel_count = 0;
-    velocity = { 0, 0 };
-}
-
-
 void Cell::move(const Vector& vector, const Map& map) {
     velocity = vector;
     if(velocity.scalar() > 1) {
