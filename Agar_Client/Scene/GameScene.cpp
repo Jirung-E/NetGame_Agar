@@ -56,6 +56,8 @@ void GameScene::setUp() {
     press_split = false;
 
     player_destination = { 0, 0 };
+
+    send_limit_flag = false;
 }
 
 
@@ -274,7 +276,11 @@ void GameScene::updatePlayer(const POINT& point) {
     player_destination.x = ((point.x - map_area.left) / map_area_w) * map.getWidth();
     player_destination.y = ((point.y - map_area.top) / map_area_h) * map.getHeight();
 
-	SendActionPacket();
+    if(!send_limit_flag) {
+        SendActionPacket();
+    }
+
+    send_limit_flag = !send_limit_flag;
 }
 
 

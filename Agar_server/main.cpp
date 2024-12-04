@@ -55,7 +55,8 @@ void send_packet(SOCKET socket, const char* buf, int size) {
 void run_game(World& world) {
     auto timer = clock();
     auto elapsed = 0;
-    int update_time = fps(30);
+    int update_time = fps(60);
+    bool send_limit_flag = false;
 
     while (true) {
         elapsed += clock() - timer;
@@ -67,55 +68,59 @@ void run_game(World& world) {
         elapsed -= update_time;
         world.update(update_time);
 
-        auto players = world.getPlayers();
-        auto traps = world.getTraps();
-        auto feeds = world.getFeeds();
+        if(!send_limit_flag) {
+            auto players = world.getPlayers();
+            auto traps = world.getTraps();
+            auto feeds = world.getFeeds();
 
-        SC_WORLD_PACKET packet;
-        packet.type = SC_WORLD;
-        packet.object_num = 0;
+            SC_WORLD_PACKET packet;
+            packet.type = SC_WORLD;
+            packet.object_num = 0;
 
-        for (const auto& p : players) {
-            auto player = p.second;
-            for (const auto& cell : player.cells) {
+            for(const auto& p : players) {
+                auto player = p.second;
+                for(const auto& cell : player.cells) {
+                    SC_OBJECT obj;
+                    obj.id = player.id;
+                    obj.x = cell->position.x;
+                    obj.y = cell->position.y;
+                    obj.radius = cell->getRadius();
+                    obj.color = player.color;
+
+                    packet.objects.push_back(obj);
+                    packet.object_num++;
+                }
+            }
+
+            for(const auto& cell : feeds) {
                 SC_OBJECT obj;
-                obj.id = player.id;
+                obj.id = FEED_ID;
                 obj.x = cell->position.x;
                 obj.y = cell->position.y;
                 obj.radius = cell->getRadius();
-                obj.color = player.color;
+                obj.color = cell->color;
 
                 packet.objects.push_back(obj);
                 packet.object_num++;
             }
+
+            for(const auto& cell : traps) {
+                SC_OBJECT obj;
+                obj.id = TRAP_ID;
+                obj.x = cell->position.x;
+                obj.y = cell->position.y;
+                obj.radius = cell->getRadius();
+                obj.color = cell->color;
+
+                packet.objects.push_back(obj);
+                packet.object_num++;
+            }
+
+            packet.size = sizeof(PACKET_HEADER) + sizeof(int) + sizeof(SC_OBJECT) * packet.object_num;
+            send_packet(INVALID_SOCKET, packet.serialize().data(), packet.size);
         }
-
-        for (const auto& cell : feeds) {
-            SC_OBJECT obj;
-            obj.id = FEED_ID;
-            obj.x = cell->position.x;
-            obj.y = cell->position.y;
-            obj.radius = cell->getRadius();
-            obj.color = cell->color;
-
-            packet.objects.push_back(obj);
-            packet.object_num++;
-        }
-
-        for (const auto& cell : traps) {
-            SC_OBJECT obj;
-            obj.id = TRAP_ID;
-            obj.x = cell->position.x;
-            obj.y = cell->position.y;
-            obj.radius = cell->getRadius();
-            obj.color = cell->color;
-
-            packet.objects.push_back(obj);
-            packet.object_num++;
-        }
-
-        packet.size = sizeof(PACKET_HEADER) + sizeof(int) + sizeof(SC_OBJECT) * packet.object_num;
-        send_packet(INVALID_SOCKET, packet.serialize().data(), packet.size);
+        
+        send_limit_flag = !send_limit_flag;
     }
 }
 

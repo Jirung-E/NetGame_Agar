@@ -44,6 +44,8 @@ private:
     bool press_split;
     Point mouse_position;   // ╬х╬╡юс
 
+    bool send_limit_flag;
+
     std::atomic_bool connected;
 
     //SOCKET sock;
