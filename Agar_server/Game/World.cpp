@@ -42,7 +42,7 @@ void World::addPlayer(uint8_t id) {
     Point p { getRandomNumberOf(Range { 1.0, (double)map.getWidth()-1 }, 0.1),
               getRandomNumberOf(Range { 1.0, (double)map.getHeight()-1 }, 0.1) 
     };
-    players.emplace(id, id, p);
+    players.insert({ id, { id, p } });
 }
 
 void World::removePlayer(uint8_t id) {
