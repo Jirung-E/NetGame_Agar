@@ -21,8 +21,6 @@ public:
     Player(const uint8_t id, const Point& position);
 
 public:
-    void setUp();
-
     void move(const Vector& vector, const Map& map);
     void move(const Map& map);
 

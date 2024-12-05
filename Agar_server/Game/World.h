@@ -16,7 +16,6 @@ class World {
 private:
     Map map;
     std::unordered_map<uint8_t, Player> players;
-    //std::list<AI*> ais;
     std::list<Trap*> traps;
     std::list<Feed*> feeds;
 
@@ -45,16 +44,13 @@ public:
 
 private:
     void updatePlayers();
-    //void updateEnemies();
     void updateFeeds();
     void updateTraps();
     void collisionCheck();
     void playerCollisionCheck();
-    //void enemyCollisionCheck();
     void trapCollisionCheck();
 
 public:
     void randomGenFeed();
-    //void randomGenEnemy();
     void randomGenTrap();
 };
