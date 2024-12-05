@@ -66,7 +66,9 @@ void run_game(World& world) {
         }
 
         elapsed -= update_time;
+        // 패킷 처리 이벤트 false
         world.update(update_time);
+        // 패킷 처리 이벤트 true
 
         if(!send_limit_flag) {
             auto players = world.getPlayers();
@@ -164,6 +166,7 @@ void process_packet_thread() {
         packet_queue.pop();
         lock.unlock();
 
+        // WaitForSingleObject(패킷 처리 이벤트)
         // 패킷 처리
         ProcessPacket(packet.id, packet.data.data());
     }
