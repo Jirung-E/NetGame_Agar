@@ -38,6 +38,7 @@
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Widgets\Button.cpp" />
+    <ClCompile Include="Widgets\EditBox.cpp" />
     <ClCompile Include="Widgets\TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +61,7 @@
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Widgets\Button.h" />
+    <ClInclude Include="Widgets\EditBox.h" />
     <ClInclude Include="Widgets\TextBox.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

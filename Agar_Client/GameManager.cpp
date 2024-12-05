@@ -23,10 +23,10 @@ void GameManager::syncSize(const HWND& hWnd) {
 void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 	switch(current_scene->getID()) {
 	case Main:
-		switch(keycode) {
-		case VK_ESCAPE:
-			quit(hWnd);
-			break;
+		if(!main_scene.keyboardInput(keycode)) {
+			if(keycode == VK_ESCAPE) {
+				quit(hWnd);
+			}
 		}
 		break;
 	case Game:
@@ -75,6 +75,9 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Directi
 		break;
 	case Right:
 		switch(current_scene->getID()) {
+        case Main:
+            main_scene.clickR(point);
+            break;
 		case Game:
 			game_scene.clickR(point);
 			break;
