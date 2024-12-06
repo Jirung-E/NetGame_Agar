@@ -74,6 +74,8 @@ void GameScene::connect(const std::string& addr) {
     
     connected = true;
 
+    // TODO: send login packet
+
     std::thread recv_thread { &GameScene::RecvPacket, this };
     recv_thread.detach();
 }

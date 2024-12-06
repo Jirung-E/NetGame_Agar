@@ -59,7 +59,7 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Directi
 	case Left:
 		switch(buttonClicked(point)) {
 		case StartButton:
-			if(main_scene.isValidAddress()) {
+			if(main_scene.isValid()) {
 				gameStart(hWnd);
 			}
 			break;
@@ -147,10 +147,8 @@ void GameManager::gameStart(const HWND& hWnd) {
 
 	game_scene.setUp();
 
-	tstring taddr = main_scene.getAddress();
-	std::string addr { taddr.begin(), taddr.end() };
-
-	game_scene.connect(addr);
+    game_scene.nickname = main_scene.getName();
+	game_scene.connect(main_scene.getAddress());
     
 	current_scene = &game_scene;
 }

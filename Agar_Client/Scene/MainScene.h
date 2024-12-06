@@ -9,7 +9,8 @@
 class MainScene : public Scene {
 private:
     Button start_button;
-    mutable EditBox edit_box;
+    mutable EditBox addr_edit;
+    mutable EditBox name_edit;
 
 public:
     MainScene();
@@ -23,6 +24,7 @@ public:
 
     bool keyboardInput(int keycode);
 
-    bool isValidAddress() const;
-    tstring getAddress() const;
+    bool isValid() const;
+    std::string getAddress() const;
+    std::string getName() const;
 };

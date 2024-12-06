@@ -19,6 +19,8 @@ public:
     };
     bool show_score;
 
+    std::string nickname;
+
 private:
     Map map;
 

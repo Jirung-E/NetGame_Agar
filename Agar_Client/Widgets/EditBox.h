@@ -37,6 +37,5 @@ public:
     tstring getText() const;
     bool isValid() const;
 
-private:
     void validate();
 };

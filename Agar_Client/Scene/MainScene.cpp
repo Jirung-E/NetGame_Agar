@@ -6,25 +6,36 @@
 MainScene::MainScene(): 
     Scene { Main }, 
     start_button { L"Start", { 25, 40 }, 50, 20 },
-    edit_box { L"IPADDR:PORT", { 0, 70 }, 100, 10 }
+    addr_edit { L"IPADDR:PORT", { 0, 80 }, 100, 10 },
+    name_edit { L"Nickname", { 0, 65 }, 100, 10 }
 {
     start_button.border_color = Red;
     start_button.border_width = 3;
     start_button.id = StartButton;
 
-    edit_box.border_color = Black;
-    edit_box.border_width = 2;
-    edit_box.focused_border_color = Blue;
-    edit_box.focused_border_width = 4;
-    edit_box.text_mag = 80;
-    edit_box.format.assign(L"^$|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{1,5}");
+    addr_edit.border_color = Black;
+    addr_edit.border_width = 2;
+    addr_edit.focused_border_color = Blue;
+    addr_edit.focused_border_width = 4;
+    addr_edit.text_mag = 80;
+    addr_edit.format.assign(L"^$|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{1,5}");
+
+    name_edit.border_color = Black;
+    name_edit.border_width = 2;
+    name_edit.focused_border_color = Blue;
+    name_edit.focused_border_width = 4;
+    name_edit.text_mag = 80;
+    name_edit.format.assign(L".{2,16}");
+    name_edit.validate();
 }
 
 
 void MainScene::draw(const HDC& hdc) const {
     drawBackground(hdc, White);
 
-    edit_box.show(hdc, valid_area);
+    addr_edit.show(hdc, valid_area);
+
+    name_edit.show(hdc, valid_area);
 
     // Draw Start Button
     start_button.show(hdc, valid_area);
@@ -38,16 +49,23 @@ void MainScene::draw(const HDC& hdc) const {
 
 
 ButtonID MainScene::clickL(const POINT& point) const {
-    edit_box.is_focused = false;
+    addr_edit.is_focused = false;
+    name_edit.is_focused = false;
 
     RECT r = start_button.absoluteArea(valid_area);
     if(PtInRect(&r, point)) {
         return start_button.id;
     }
 
-    r = edit_box.absoluteArea(valid_area);
+    r = addr_edit.absoluteArea(valid_area);
     if(PtInRect(&r, point)) {
-        edit_box.is_focused = true;
+        addr_edit.is_focused = true;
+        return None;
+    }
+
+    r = name_edit.absoluteArea(valid_area);
+    if(PtInRect(&r, point)) {
+        name_edit.is_focused = true;
         return None;
     }
 
@@ -55,11 +73,18 @@ ButtonID MainScene::clickL(const POINT& point) const {
 }
 
 ButtonID MainScene::clickR(const POINT& point) const {
-    edit_box.is_focused = false;
+    addr_edit.is_focused = false;
+    name_edit.is_focused = false;
 
-    RECT r = edit_box.absoluteArea(valid_area);
+    RECT r = addr_edit.absoluteArea(valid_area);
     if(PtInRect(&r, point)) {
-        edit_box.is_focused = true;
+        addr_edit.is_focused = true;
+        return None;
+    }
+
+    r = name_edit.absoluteArea(valid_area);
+    if(PtInRect(&r, point)) {
+        name_edit.is_focused = true;
         return None;
     }
 
@@ -68,19 +93,35 @@ ButtonID MainScene::clickR(const POINT& point) const {
 
 
 bool MainScene::keyboardInput(int keycode) {
-    if(edit_box.is_focused) {
+    if(addr_edit.is_focused) {
         switch(keycode) {
             case VK_BACK:
-                edit_box.backspace();
+                addr_edit.backspace();
                 return true;
             case VK_RETURN:
-                edit_box.is_focused = false;
+                addr_edit.is_focused = false;
                 return true;
             case VK_ESCAPE:
-                edit_box.is_focused = false;
+                addr_edit.is_focused = false;
                 return true;
             default:
-                edit_box.add(keycode);
+                addr_edit.add(keycode);
+                return true;
+        }
+    }
+    if(name_edit.is_focused) {
+        switch(keycode) {
+            case VK_BACK:
+                name_edit.backspace();
+                return true;
+            case VK_RETURN:
+                name_edit.is_focused = false;
+                return true;
+            case VK_ESCAPE:
+                name_edit.is_focused = false;
+                return true;
+            default:
+                name_edit.add(keycode);
                 return true;
         }
     }
@@ -89,10 +130,16 @@ bool MainScene::keyboardInput(int keycode) {
 }
 
 
-bool MainScene::isValidAddress() const {
-    return edit_box.isValid();
+bool MainScene::isValid() const {
+    return addr_edit.isValid() && name_edit.isValid();
 }
 
-tstring MainScene::getAddress() const {
-    return edit_box.getText();
+std::string MainScene::getAddress() const {
+    tstring tstr = addr_edit.getText();
+    return { tstr.begin(), tstr.end() };
+}
+
+std::string MainScene::getName() const {
+    tstring tstr = name_edit.getText();
+    return { tstr.begin(), tstr.end() };
 }
