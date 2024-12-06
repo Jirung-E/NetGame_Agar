@@ -37,6 +37,8 @@ queue<Packet> packet_queue;
 mutex queue_mutex;
 condition_variable queue_condition;
 
+HANDLE hProcessPacket;
+
 // 패킷을 전송하는 함수
 void send_packet(SOCKET socket, const char* buf, int size) {
     for (auto& sock : sockets) {
@@ -67,8 +69,10 @@ void run_game(World& world) {
 
         elapsed -= update_time;
         // 패킷 처리 이벤트 false
+        ResetEvent(hProcessPacket);
         world.update(update_time);
         // 패킷 처리 이벤트 true
+		SetEvent(hProcessPacket);
 
         if(!send_limit_flag) {
             auto players = world.getPlayers();
@@ -167,6 +171,8 @@ void process_packet_thread() {
         lock.unlock();
 
         // WaitForSingleObject(패킷 처리 이벤트)
+		WaitForSingleObject(hProcessPacket, INFINITE);
+
         // 패킷 처리
         ProcessPacket(packet.id, packet.data.data());
     }
@@ -280,6 +286,8 @@ int NetworkInitialize() {
 // 메인 함수
 int main() {
     world.setUp();
+
+	hProcessPacket = CreateEvent(NULL, FALSE, TRUE, NULL);
 
     thread game_logic(run_game, ref(world));
     thread packet_processor(process_packet_thread);
