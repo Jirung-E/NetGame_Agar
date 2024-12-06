@@ -17,7 +17,7 @@ MainScene::MainScene():
     edit_box.focused_border_color = Blue;
     edit_box.focused_border_width = 4;
     edit_box.text_mag = 80;
-    edit_box.format.assign(L"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{1,5}");
+    edit_box.format.assign(L"^$|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{1,5}");
 }
 
 
@@ -86,4 +86,13 @@ bool MainScene::keyboardInput(int keycode) {
     }
 
     return false;
+}
+
+
+bool MainScene::isValidAddress() const {
+    return edit_box.isValid();
+}
+
+tstring MainScene::getAddress() const {
+    return edit_box.getText();
 }

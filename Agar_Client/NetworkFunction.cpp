@@ -18,7 +18,7 @@ WSADATA wsadata;
 SOCKET clientsocket;
 struct sockaddr_in serveraddr;
 
-void NetworkInitialize()
+void NetworkInitialize(const std::string& ip, const int port)
 {
 	int retval;
 

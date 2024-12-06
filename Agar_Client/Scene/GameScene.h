@@ -8,6 +8,7 @@
 #include <list>
 #include <ctime>
 #include <mutex>
+
 #include "../../protocol.h"
 
 
@@ -55,7 +56,7 @@ public:
 
 public:
     void setUp();
-    void connect();
+    void connect(const std::string& addr);
     void disconnect();
 
     CS_ACTION_PACKET BuildActionPacket();

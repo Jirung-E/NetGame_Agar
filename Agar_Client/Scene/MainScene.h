@@ -22,4 +22,7 @@ public:
     ButtonID clickR(const POINT& point) const;
 
     bool keyboardInput(int keycode);
+
+    bool isValidAddress() const;
+    tstring getAddress() const;
 };

@@ -35,6 +35,7 @@ public:
     void add(TCHAR c);
     void backspace();
     tstring getText() const;
+    bool isValid() const;
 
 private:
     void validate();

@@ -131,6 +131,10 @@ tstring EditBox::getText() const {
     return text;
 }
 
+bool EditBox::isValid() const {
+    return !is_error;
+}
+
 void EditBox::validate() {
     std::wsmatch m;
     is_error = !std::regex_match(text, m, format);
