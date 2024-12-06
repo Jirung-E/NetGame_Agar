@@ -34,13 +34,12 @@ void NetworkInitialize(const std::string& ip, const int port)
 	// 서버 주소 설정
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
-	serveraddr.sin_port = htons(SERVERPORT);
+	inet_pton(AF_INET, ip.c_str(), &serveraddr.sin_addr);
+	serveraddr.sin_port = htons(port);
 
 	// 서버에 접속
 	retval = connect(clientsocket, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR) err_quit("connect()");
-
 }
 
 void NetworkFinalize()

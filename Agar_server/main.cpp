@@ -243,6 +243,30 @@ int NetworkInitialize() {
         err_quit("listen()");
     }
 
+    {
+        char hostName[256];
+
+        // 호스트 이름 가져오기
+        if(gethostname(hostName, sizeof(hostName)) != 0) {
+            std::cerr << "gethostname failed." << std::endl;
+            WSACleanup();
+            return 1;
+        }
+
+        // 호스트 엔트리 가져오기
+        struct hostent* hostEntry = gethostbyname(hostName);
+        if(hostEntry == nullptr) {
+            std::cerr << "gethostbyname failed." << std::endl;
+            WSACleanup();
+            return 1;
+        }
+
+        // 첫 번째 IP 주소 출력
+        struct in_addr addr;
+        addr.s_addr = *(u_long*)hostEntry->h_addr_list[0];
+        std::cout << "Local IP Address - " << inet_ntoa(addr) << ":" << SERVERPORT << std::endl;
+    }
+
     SOCKET client_sock;
     struct sockaddr_in clientaddr;
     int addrlen;
