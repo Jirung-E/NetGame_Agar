@@ -5,6 +5,7 @@
 #define CS_ACTION 1
 #define CS_EXIT 2
 #define CS_RESPAWN 3
+#define CS_LOGIN 4
 
 #define SC_WORLD 1
 #define SC_INIT 2
@@ -36,6 +37,12 @@ struct CS_EXIT_PACKET {
 
 struct CS_RESPAWN_PACKET {
 	PACKET_HEADER header;  // CS_RESPAWN
+};
+
+struct CS_LOGIN_PACKET {
+	PACKET_HEADER header;  // CS_LOGIN
+	COLORREF color;
+	char name[16];
 };
 
 struct SC_OBJECT {
