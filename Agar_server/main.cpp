@@ -3,7 +3,6 @@
 #include <chrono>
 #include <atomic>
 #include <mutex>
-#include <queue>
 #include <condition_variable>
 
 #include "Common.h"
@@ -27,15 +26,7 @@ const uint8_t FEED_ID = 200;
 
 World world;
 
-// 작업 큐 정의
-struct Packet {
-    int id;
-    vector<char> data;
-};
 
-queue<Packet> packet_queue;
-mutex queue_mutex;
-condition_variable queue_condition;
 
 HANDLE hProcessPacket;
 
@@ -74,6 +65,8 @@ void run_game(World& world) {
         // 패킷 처리 이벤트 true
 		SetEvent(hProcessPacket);
         world.update(update_time);
+
+
 
         if(!send_limit_flag) {
             auto players = world.getPlayers();
@@ -161,23 +154,7 @@ void ProcessPacket(int id, char* buf) {
     }
 }
 
-// 패킷 처리 전용 스레드
-void process_packet_thread() {
-    while (true) {
-        unique_lock<mutex> lock(queue_mutex);
-        queue_condition.wait(lock, [] { return !packet_queue.empty(); });//queue가 비어있을 시: 스레드는 대기(sleep상태) // queue가 비어있지 않을 시: wake >> wait 중 lock 상태 유지 X
-         
-        Packet packet = packet_queue.front();
-        packet_queue.pop();
-        lock.unlock();
 
-        // WaitForSingleObject(패킷 처리 이벤트)
-		WaitForSingleObject(hProcessPacket, INFINITE);
-
-        // 패킷 처리
-        ProcessPacket(packet.id, packet.data.data());
-    }
-}
 // 클라이언트 패킷 처리
 void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     int retval;
@@ -205,12 +182,8 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             break;
         }
 
-        // 패킷 큐에 추가
-        {
-            lock_guard<mutex> lock(queue_mutex);
-            packet_queue.push({ id, vector<char>(buf, buf + retval) });
-        }
-        queue_condition.notify_one();//스레드 깨우기
+        // 패킷 처리 직접 수행
+        ProcessPacket(id, buf);
     }
 
     world.removePlayer(id);
@@ -291,10 +264,8 @@ int main() {
 	hProcessPacket = CreateEvent(NULL, FALSE, TRUE, NULL);
 
     thread game_logic(run_game, ref(world));
-    thread packet_processor(process_packet_thread);
 
     game_logic.detach();
-    packet_processor.detach();
 
     NetworkInitialize();
     return 0;
