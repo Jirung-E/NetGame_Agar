@@ -182,6 +182,8 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
             break;
         }
 
+		WaitForSingleObject(hProcessPacket, INFINITE);
+
         // 패킷 처리 직접 수행
         ProcessPacket(id, buf);
     }
