@@ -78,7 +78,6 @@ void run_game(World& world) {
             auto feeds = world.getFeeds();
 
             SC_WORLD_PACKET packet;
-            packet.type = SC_WORLD;
             packet.player_num = 0;
             packet.object_num = 0;
 
@@ -92,7 +91,6 @@ void run_game(World& world) {
                 SC_PLAYER_PROFILE profile;
                 profile.id = player.id;
                 strcpy(profile.name, player.getName().c_str());
-                cout << profile.id << " " << profile.name << endl;
 
                 packet.players.push_back(profile);
                 packet.player_num++;
@@ -143,13 +141,17 @@ void run_game(World& world) {
 }
 
 
+thread_local std::string player_name;
+
 void ProcessPacket(int id, char* buf) {
     char packetType = buf[0];
 
     switch (packetType) {
     case CS_LOGIN: {
         CS_LOGIN_PACKET* p = reinterpret_cast<CS_LOGIN_PACKET*>(buf);
-        world.setPlayerName(id, p->name);
+        world.addPlayer(id);
+        player_name = p->name;
+        world.setPlayerName(id, player_name);
         break;
     }
     case CS_ACTION: {
@@ -167,6 +169,7 @@ void ProcessPacket(int id, char* buf) {
     case CS_RESPAWN: {
         //리스폰처리
         world.addPlayer(id);
+        world.setPlayerName(id, player_name);
         break;
     }
     case CS_EXIT: {
@@ -196,8 +199,6 @@ void ProcessClient(SOCKET socket, struct sockaddr_in clientaddr, int id) {
     if (retval == SOCKET_ERROR) {
         err_display("[server] send()");
     }
-
-    world.addPlayer(id);
 
     while (true) {
         retval = recv(socket, buf, PACKETSIZEMAX, 0);
