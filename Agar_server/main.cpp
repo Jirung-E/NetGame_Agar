@@ -1,9 +1,10 @@
+#pragma warning(disable:4996)
+
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <atomic>
 #include <mutex>
-#include <condition_variable>
 
 #include "Common.h"
 #include "Game/World.h"
@@ -59,9 +60,13 @@ void run_game(World& world) {
         }
 
         elapsed -= update_time;
+
+
         // 패킷 처리 이벤트 false
         ResetEvent(hProcessPacket);
+
         world.update(update_time);
+
         // 패킷 처리 이벤트 true
 		SetEvent(hProcessPacket);
 
@@ -74,10 +79,24 @@ void run_game(World& world) {
 
             SC_WORLD_PACKET packet;
             packet.type = SC_WORLD;
+            packet.player_num = 0;
             packet.object_num = 0;
 
             for(const auto& p : players) {
                 auto player = p.second;
+
+                if(player.cells.empty()) {
+                    continue;
+                }
+
+                SC_PLAYER_PROFILE profile;
+                profile.id = player.id;
+                strcpy(profile.name, player.getName().c_str());
+                cout << profile.id << " " << profile.name << endl;
+
+                packet.players.push_back(profile);
+                packet.player_num++;
+
                 for(const auto& cell : player.cells) {
                     SC_OBJECT obj;
                     obj.id = player.id;
@@ -115,8 +134,8 @@ void run_game(World& world) {
                 packet.object_num++;
             }
 
-            packet.size = sizeof(PACKET_HEADER) + sizeof(int) + sizeof(SC_OBJECT) * packet.object_num;
-            send_packet(INVALID_SOCKET, packet.serialize().data(), packet.size);
+            auto data = packet.serialize();
+            send_packet(INVALID_SOCKET, data.data(), packet.size);
         }
         
         send_limit_flag = !send_limit_flag;
@@ -128,6 +147,11 @@ void ProcessPacket(int id, char* buf) {
     char packetType = buf[0];
 
     switch (packetType) {
+    case CS_LOGIN: {
+        CS_LOGIN_PACKET* p = reinterpret_cast<CS_LOGIN_PACKET*>(buf);
+        world.setPlayerName(id, p->name);
+        break;
+    }
     case CS_ACTION: {
         CS_ACTION_PACKET* p = reinterpret_cast<CS_ACTION_PACKET*>(buf);
 

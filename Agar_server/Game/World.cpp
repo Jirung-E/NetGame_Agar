@@ -89,6 +89,13 @@ void World::setPlayerDestination(uint8_t id, const Point& dest) {
     }
 }
 
+void World::setPlayerName(uint8_t id, const std::string& name) {
+    auto it = players.find(id);
+    if(it != players.end()) {
+        it->second.setName(name);
+    }
+}
+
 
 const std::list<Trap*>& World::getTraps() const {
     return traps;

@@ -17,6 +17,9 @@ public:
 
     Point destination;
 
+private:
+    std::string name;
+
 public:
     Player(const uint8_t id, const Point& position);
 
@@ -36,4 +39,7 @@ public:
     double getSize() const;
 
     void split();
+
+    void setName(const std::string& name);
+    std::string getName() const;
 };

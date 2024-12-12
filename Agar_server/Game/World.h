@@ -37,14 +37,13 @@ public:
     void splitPlayer(uint8_t id);
     void spitPlayer(uint8_t id);
     void setPlayerDestination(uint8_t id, const Point& dest);
+    void setPlayerName(uint8_t id, const std::string& name);
 
     const std::list<Trap*>& getTraps() const;
     const std::list<Feed*>& getFeeds() const;
 
-    void updatePlayers();
-
 private:
-    //void updatePlayers();
+    void updatePlayers();
     void updateFeeds();
     void updateTraps();
     void collisionCheck();

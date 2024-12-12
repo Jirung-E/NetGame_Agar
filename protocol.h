@@ -44,6 +44,11 @@ struct CS_LOGIN_PACKET {
 	char name[16];
 };
 
+struct SC_PLAYER_PROFILE {
+	uint8_t id;
+	char name[16];
+};
+
 struct SC_OBJECT {
 	// 타입은 필요 없다.
 	uint8_t id;
@@ -54,17 +59,34 @@ struct SC_OBJECT {
 };
 
 struct SC_WORLD_PACKET : public PACKET_HEADER {
+	int player_num;
+	std::vector<SC_PLAYER_PROFILE> players;
 	int object_num;
 	std::vector<SC_OBJECT> objects;
 
 public:
 	std::vector<char> serialize() {
-		std::vector<char> buffer(sizeof(PACKET_HEADER) + sizeof(int) + objects.size() * sizeof(SC_OBJECT));
+		std::vector<char> buffer(sizeof(PACKET_HEADER) 
+			+ sizeof(int) 
+			+ players.size() * sizeof(SC_PLAYER_PROFILE) 
+			+ sizeof(int) 
+			+ objects.size() * sizeof(SC_OBJECT));
+
+		size_t offset = sizeof(PACKET_HEADER);
+		*(int*)&buffer[offset] = player_num;
+		size = players.size() * sizeof(SC_PLAYER_PROFILE);
+		memcpy(&buffer[offset + sizeof(int)], players.data(), size);
+		offset += sizeof(int) + size;
+
+		*(int*)&buffer[offset] = object_num;
+		size = objects.size() * sizeof(SC_OBJECT);
+		memcpy(&buffer[offset + sizeof(int)], objects.data(), size);
+
 		PACKET_HEADER* header = (PACKET_HEADER*)&buffer[0];
-		header->type = SC_WORLD;
-		header->size = buffer.size();
-		*(int*)&buffer[sizeof(PACKET_HEADER)] = object_num;
-		memcpy(&buffer[sizeof(PACKET_HEADER) + sizeof(int)], objects.data(), objects.size() * sizeof(SC_OBJECT));
+		type = SC_WORLD;
+		header->type = type;
+		size = buffer.size();
+		header->size = size;
 
 		return buffer;
 	}

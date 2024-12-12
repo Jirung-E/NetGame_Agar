@@ -113,6 +113,22 @@ PACKET_HEADER* RecvPacket() {
             SC_WORLD_PACKET* packet = new SC_WORLD_PACKET;
             packet->type = SC_WORLD;
 			packet->size = header.size;
+			switch(recv(clientsocket, (char*)&packet->player_num, sizeof(int), MSG_WAITALL)) {
+				case SOCKET_ERROR:
+					err_quit("[client2] recv()");
+					return nullptr;
+				case 0:
+					return nullptr;
+				default:
+					packet->players.resize(packet->player_num);
+					switch(recv(clientsocket, (char*)packet->players.data(), packet->player_num * sizeof(SC_PLAYER_PROFILE), MSG_WAITALL)) {
+						case SOCKET_ERROR:
+							err_quit("[client3] recv()");
+							return nullptr;
+						case 0:
+							return nullptr;
+					}
+			}
             switch(recv(clientsocket, (char*)&packet->object_num, sizeof(int), MSG_WAITALL)) {
                 case SOCKET_ERROR:
                     err_quit("[client2] recv()");
@@ -128,8 +144,9 @@ PACKET_HEADER* RecvPacket() {
 						case 0:
 							return nullptr;
 					}
-                    return packet;
             }
+
+            return packet;
         }
 	}
 }
