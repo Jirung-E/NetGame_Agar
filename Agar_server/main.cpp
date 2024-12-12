@@ -70,9 +70,10 @@ void run_game(World& world) {
         elapsed -= update_time;
         // 패킷 처리 이벤트 false
         ResetEvent(hProcessPacket);
-        world.update(update_time);
+        world.updatePlayers();
         // 패킷 처리 이벤트 true
 		SetEvent(hProcessPacket);
+        world.update(update_time);
 
         if(!send_limit_flag) {
             auto players = world.getPlayers();

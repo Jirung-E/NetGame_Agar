@@ -31,7 +31,7 @@ void World::update(int elapsed) {
         randomGenFeed();
     }
 
-    updatePlayers();
+    //updatePlayers();
     updateFeeds();
     updateTraps();
     collisionCheck();

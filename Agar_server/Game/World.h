@@ -41,9 +41,10 @@ public:
     const std::list<Trap*>& getTraps() const;
     const std::list<Feed*>& getFeeds() const;
 
+    void updatePlayers();
 
 private:
-    void updatePlayers();
+    //void updatePlayers();
     void updateFeeds();
     void updateTraps();
     void collisionCheck();
