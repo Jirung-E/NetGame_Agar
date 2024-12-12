@@ -60,7 +60,6 @@ void GameScene::setUp() {
     send_limit_flag = false;
 }
 
-
 void GameScene::connect(const std::string& addr) {
     std::string ip = SERVERIP;
     int port = SERVERPORT;
@@ -75,6 +74,7 @@ void GameScene::connect(const std::string& addr) {
     connected = true;
 
     // TODO: send login packet
+    SendLoginPacket();
 
     std::thread recv_thread { &GameScene::RecvPacket, this };
     recv_thread.detach();
@@ -128,6 +128,17 @@ void GameScene::SendRespawnPacket()
 	SendData(&packet, sizeof(CS_RESPAWN_PACKET));
 }
 
+
+void GameScene::SendLoginPacket()
+{
+    CS_LOGIN_PACKET packet;
+    ZeroMemory(&packet, sizeof(packet));
+    packet.header.type = CS_LOGIN;
+	packet.header.size = sizeof(PACKET_HEADER) + nickname.size() + 1; // NULL문자까지 포함
+    strcpy(packet.name, nickname.c_str());
+
+    SendData(&packet, packet.header.size);
+}
 
 void GameScene::RecvPacket() {
     int retval;

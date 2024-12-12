@@ -65,6 +65,7 @@ public:
 	void SendActionPacket();
 	void SendExitPacket();
 	void SendRespawnPacket();
+    void SendLoginPacket();
     void RecvPacket();
     void ProcessPacket(PACKET_HEADER* packet);
 
