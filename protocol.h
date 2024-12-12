@@ -38,6 +38,11 @@ struct CS_RESPAWN_PACKET {
 	PACKET_HEADER header;  // CS_RESPAWN
 };
 
+struct CS_LOGIN_PACKET {
+	PACKET_HEADER header;  // CS_LOGIN
+	char name[16];
+};
+
 struct SC_OBJECT {
 	// 타입은 필요 없다.
 	uint8_t id;
