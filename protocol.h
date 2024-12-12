@@ -5,6 +5,7 @@
 #define CS_ACTION 1
 #define CS_EXIT 2
 #define CS_RESPAWN 3
+#define CS_LOGIN 4
 
 #define SC_WORLD 1
 #define SC_INIT 2
