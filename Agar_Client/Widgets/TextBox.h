@@ -14,6 +14,7 @@ public:
     COLORREF border_color;
     int border_width;
     tstring text;
+    int text_mag;
     bool transparent_background;
     bool transparent_border;
     UINT align;
@@ -28,7 +29,7 @@ public:
     void show(const HDC& hdc, const RECT& valid_area) const;
     RECT absoluteArea(const RECT& valid_area) const;
 
-private:
-    void drawBase(const HDC& hdc, const RECT& valid_area) const;
-    void drawText(const HDC& hdc, const RECT& valid_area) const;
+protected:
+    virtual void drawBase(const HDC& hdc, const RECT& valid_area) const;
+    virtual void drawText(const HDC& hdc, const RECT& valid_area) const;
 };

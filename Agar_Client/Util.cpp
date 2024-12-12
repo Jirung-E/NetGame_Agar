@@ -139,7 +139,7 @@ RECT& operator%=(RECT& rect, double per) {
 	rect.left += w * (100 - per)/2 / 100;
 	rect.right -= w * (100 - per)/2 / 100;
 	rect.top += h * (100 - per)/2 / 100;
-	rect.right -= h * (100 - per)/2 / 100;
+	rect.bottom -= h * (100 - per)/2 / 100;
 
 	return rect;
 }

@@ -8,6 +8,8 @@
 #include "Common.h"
 #include "../protocol.h"
 
+#include <string>
+
 //////////////////////////////////////////////////////////////////////////
 // Network Function
 
@@ -18,7 +20,7 @@ extern char* SERVERIP;
 extern SOCKET clientsocket;
 
 
-void NetworkInitialize();  // 네트워크 초기화
+void NetworkInitialize(const std::string& ip, const int port);  // 네트워크 초기화
 void NetworkFinalize();    // 네트워크 종료
 
 //DWORD WINAPI RecvThread(LPVOID arg); // 데이터 수신 스레드 -> GameScene에서 구현

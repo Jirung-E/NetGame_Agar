@@ -1,7 +1,7 @@
 #include "TextBox.h"
 
 
-TextBox::TextBox(const tstring& text, const Point& position, double width, double height) : text { text },
+TextBox::TextBox(const tstring& text, const Point& position, double width, double height) : text { text }, text_mag { 100 },
 position { position }, width { width }, height { height }, transparent_background { false }, transparent_border { false },
 square { true }, bold { 0 }, italic { false },
 background_color { White }, text_color { Black }, border_color { White }, border_width { 1 }, align { DT_CENTER } {
@@ -59,6 +59,7 @@ void TextBox::drawText(const HDC& hdc, const RECT& valid_area) const {
     RECT rect = absoluteArea(valid_area);
     rect %= 90;
     logfont.lfHeight = (rect.bottom - rect.top) * 90 / 100;
+    logfont.lfHeight = logfont.lfHeight * text_mag / 100;
     switch(bold) {
     case 1:
         logfont.lfWeight = FW_BOLD;
@@ -80,6 +81,9 @@ void TextBox::drawText(const HDC& hdc, const RECT& valid_area) const {
 
     int center_x = (rect.left + rect.right) / 2;
     int center_y = (rect.top + rect.bottom) / 2;
+    rect.top = center_y - logfont.lfHeight / 2;
+    rect.bottom = center_y + logfont.lfHeight / 2;
+
     SIZE size;
     GetTextExtentPoint32W(hdc, text.c_str(), text.length(), &size);
 

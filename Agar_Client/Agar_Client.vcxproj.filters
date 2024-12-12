@@ -77,7 +77,10 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Game\Player.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\EditBox.cpp">
+      <Filter>src\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="Game\Player.h">
       <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\EditBox.h">
+      <Filter>src\Widgets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

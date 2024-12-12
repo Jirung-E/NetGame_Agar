@@ -8,6 +8,7 @@
 #include <list>
 #include <ctime>
 #include <mutex>
+
 #include "../../protocol.h"
 
 
@@ -17,6 +18,8 @@ public:
         Fixed, Dynamic
     };
     bool show_score;
+
+    std::string nickname;
 
 private:
     Map map;
@@ -55,7 +58,7 @@ public:
 
 public:
     void setUp();
-    void connect();
+    void connect(const std::string& addr);
     void disconnect();
 
     CS_ACTION_PACKET BuildActionPacket();

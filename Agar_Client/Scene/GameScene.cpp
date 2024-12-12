@@ -61,10 +61,20 @@ void GameScene::setUp() {
 }
 
 
-void GameScene::connect() {
-    NetworkInitialize();
+void GameScene::connect(const std::string& addr) {
+    std::string ip = SERVERIP;
+    int port = SERVERPORT;
+    if(addr != "") {
+        auto split = addr.find(':');
+        ip = addr.substr(0, split);
+        port = std::stoi(addr.substr(split + 1));
+    }
+
+    NetworkInitialize(ip, port);
     
     connected = true;
+
+    // TODO: send login packet
 
     std::thread recv_thread { &GameScene::RecvPacket, this };
     recv_thread.detach();

@@ -23,10 +23,10 @@ void GameManager::syncSize(const HWND& hWnd) {
 void GameManager::keyboardInput(const HWND& hWnd, int keycode) {
 	switch(current_scene->getID()) {
 	case Main:
-		switch(keycode) {
-		case VK_ESCAPE:
-			quit(hWnd);
-			break;
+		if(!main_scene.keyboardInput(keycode)) {
+			if(keycode == VK_ESCAPE) {
+				quit(hWnd);
+			}
 		}
 		break;
 	case Game:
@@ -59,7 +59,9 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Directi
 	case Left:
 		switch(buttonClicked(point)) {
 		case StartButton:
-			gameStart(hWnd);
+			if(main_scene.isValid()) {
+				gameStart(hWnd);
+			}
 			break;
 		case ResumeGame:
 			game_scene.resume();
@@ -75,6 +77,9 @@ void GameManager::clickScene(const HWND& hWnd, const POINT& point, const Directi
 		break;
 	case Right:
 		switch(current_scene->getID()) {
+        case Main:
+            main_scene.clickR(point);
+            break;
 		case Game:
 			game_scene.clickR(point);
 			break;
@@ -141,8 +146,11 @@ void GameManager::gameStart(const HWND& hWnd) {
 	fixCursor(hWnd);
 
 	game_scene.setUp();
-	game_scene.connect();
-    current_scene = &game_scene;
+
+    game_scene.nickname = main_scene.getName();
+	game_scene.connect(main_scene.getAddress());
+    
+	current_scene = &game_scene;
 }
 
 void GameManager::gameReStart(const HWND& hWnd) {
