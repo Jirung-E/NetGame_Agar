@@ -7,8 +7,13 @@
 const double Cell::min_radius = 0.3;
 const double Cell::max_radius = 5;
 
-Cell::Cell(const Point& position, const double radius) : Object { position }, radius { radius }, color { White }, 
-target_radius { radius }, prev_radius { radius }, trans_count { 0 }, accel_count { 0 }, invincible { false } {
+Cell::Cell(const uint8_t id, const Point& position, const double radius) : Object { position }, 
+    id { id }, 
+    radius { radius }, color { White }, 
+    target_radius { radius }, prev_radius { radius }, 
+    trans_count { 0 }, accel_count { 0 },
+    invincible { false }
+{
 
 }
 
@@ -179,7 +184,7 @@ Cell* Cell::spit() {
     prev_radius = radius;
     trans_count = 0;
 
-    Cell* cell = new Cell { position + velocity.unit()*(radius + min_radius/2), min_radius/1.5 };
+    Cell* cell = new Cell { id, position + velocity.unit()*(radius + min_radius/2), min_radius/1.5 };
     cell->velocity = velocity.unit();
     cell->color = color;
     return cell;
@@ -194,7 +199,7 @@ Cell* Cell::split() {
     radius = target_radius;
     prev_radius = radius;
 
-    Cell* cell = new Cell { position, target_radius };
+    Cell* cell = new Cell { id, position, target_radius };
     cell->accelerate = velocity.unit()*radius;
     cell->color = color;
     return cell;
@@ -215,7 +220,7 @@ std::list<Cell*> Cell::explode() {
 
     for(int i=1; i<frag_num; ++i) {
         Vector dir = { cos(-M_PI/2 + i*(2*M_PI)/frag_num), sin(-M_PI/2 + i*(2*M_PI)/frag_num) };
-        Cell* cell = new Cell { position + dir.unit()*radius*2, target_radius };
+        Cell* cell = new Cell { id, position + dir.unit()*radius*2, target_radius };
         cell->accelerate = dir*radius*3;
         cell->color = color;
         frag.push_back(cell);

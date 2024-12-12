@@ -8,6 +8,7 @@
 #include <list>
 #include <ctime>
 #include <mutex>
+#include <unordered_map>
 
 #include "../../protocol.h"
 
@@ -26,6 +27,7 @@ private:
 
     uint8_t id;
     std::vector<Cell> objects;
+    std::unordered_map<uint8_t, std::string> player_profiles;
     Player player;
     Point player_destination;
     mutable std::mutex objects_mutex;

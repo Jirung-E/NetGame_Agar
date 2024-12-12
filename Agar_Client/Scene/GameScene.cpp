@@ -41,6 +41,7 @@ GameScene::GameScene():
 
 void GameScene::setUp() {
     objects_mutex.lock();
+    player_profiles.clear();
     player.clearCells();
     objects.clear();
     objects_mutex.unlock();
@@ -188,11 +189,16 @@ void GameScene::ProcessPacket(PACKET_HEADER* packet) {
             objects_mutex.lock();
 
             this->objects.clear();
+            player_profiles.clear();
             player.clearCells();
+
+            for(const auto& obj : p->players) {
+                player_profiles[obj.id] = obj.name;
+            }
 
             bool my_id = false;
             for(const auto& obj : p->objects) {
-                Cell cell { Point { obj.x, obj.y }, obj.radius };
+                Cell cell { obj.id, Point { obj.x, obj.y }, obj.radius };
                 cell.color = obj.color;
                 this->objects.push_back(cell);
                 if(obj.id == id) {
@@ -314,7 +320,7 @@ void GameScene::draw(const HDC& hdc) const {
 
     map.draw(hdc, view_area);
 
-    for(auto& e : objects) {
+    for(const auto& e : objects) {
         e.draw(hdc, map, view_area);
     }
 
@@ -346,6 +352,26 @@ void GameScene::draw(const HDC& hdc) const {
                 SelectObject(hdc, old);
                 DeleteObject(pen);
             }
+        }
+    }
+
+    TextBox name_box { };
+    name_box.square = false;
+    name_box.bold = 4;
+    name_box.width = 50;
+    name_box.height = 5;
+    name_box.transparent_background = true;
+    name_box.transparent_border = true;
+
+    for(const auto& e : objects) {
+        if(player_profiles.find(e.id) != player_profiles.end()) {
+            std::string name = player_profiles.at(e.id);
+            name_box.text = { name.begin(), name.end() };
+            POINT p = e.absolutePosition(map, view_area);
+            name_box.position = { (double)p.x / horizontal_length * 100, (double)p.y / vertical_length * 100 };
+            name_box.position.x -= name_box.width/2;
+            name_box.position.y -= name_box.height/2;
+            name_box.show(hdc, valid_area);
         }
     }
 

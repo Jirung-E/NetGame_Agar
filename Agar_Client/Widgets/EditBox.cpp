@@ -7,13 +7,13 @@ EditBox::EditBox(const tstring& hint, const Point& position, double width, doubl
     focused_background_color { White },
     focused_border_color { Black },
     focused_border_width { 1 },
-    error_background_color { Red | White },
+    error_background_color { 0xEEEEFF },
     error_border_color { Red },
     format { L".*" },
     hint { hint },
     is_error { false }
 {
-
+    
 }
 
 
@@ -103,9 +103,7 @@ void EditBox::drawText(const HDC& hdc, const RECT& valid_area) const {
 
     COLORREF old_text_color = SetTextColor(hdc, text_color);
     COLORREF old_bk_color = SetBkColor(hdc, background_color);
-    if(transparent_background) {
-        SetBkMode(hdc, TRANSPARENT);
-    }
+    SetBkMode(hdc, TRANSPARENT);
     DrawText(hdc, text.c_str(), text.length(), &rect, align);
 
     SetTextColor(hdc, old_text_color);

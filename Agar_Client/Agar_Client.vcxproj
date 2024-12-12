@@ -22,13 +22,9 @@
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Game\Cell.cpp" />
-    <ClCompile Include="Game\EnemyCell.cpp" />
-    <ClCompile Include="Game\Feed.cpp" />
     <ClCompile Include="Game\Map.cpp" />
     <ClCompile Include="Game\Object.cpp" />
     <ClCompile Include="Game\Player.cpp" />
-    <ClCompile Include="Game\Trap.cpp" />
-    <ClCompile Include="Game\Virus.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Point.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
@@ -46,13 +42,9 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Game\Cell.h" />
-    <ClInclude Include="Game\EnemyCell.h" />
-    <ClInclude Include="Game\Feed.h" />
     <ClInclude Include="Game\Map.h" />
     <ClInclude Include="Game\Object.h" />
     <ClInclude Include="Game\Player.h" />
-    <ClInclude Include="Game\Trap.h" />
-    <ClInclude Include="Game\Virus.h" />
     <ClInclude Include="Math\Point.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="NetworkFunction.h" />

@@ -25,7 +25,7 @@ MainScene::MainScene():
     name_edit.focused_border_color = Blue;
     name_edit.focused_border_width = 4;
     name_edit.text_mag = 80;
-    name_edit.format.assign(L".{2,16}");
+    name_edit.format.assign(L".{2,15}");
     name_edit.validate();
 }
 

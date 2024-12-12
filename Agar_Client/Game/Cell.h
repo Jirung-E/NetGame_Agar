@@ -8,6 +8,7 @@
 
 class Cell : public Object {
 public:
+    const uint8_t id;
     COLORREF color;
     static const double max_radius;
     static const double min_radius;
@@ -21,7 +22,7 @@ protected:
     bool invincible;
 
 public:
-    Cell(const Point& position, const double radius = 0.3);
+    Cell(const uint8_t id, const Point& position, const double radius = 0.3);
 
 public:
     void setUp();
