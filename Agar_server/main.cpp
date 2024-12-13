@@ -235,6 +235,8 @@ int NetworkInitialize() {
     if (listen_sock == INVALID_SOCKET) {
         err_quit("socket()");
     }
+    int DelayZeroOpt = 1;
+    setsockopt(listen_sock, SOL_SOCKET, TCP_NODELAY, (const char*)&DelayZeroOpt, sizeof(DelayZeroOpt));
 
     struct sockaddr_in serveraddr;
     memset(&serveraddr, 0, sizeof(serveraddr));
